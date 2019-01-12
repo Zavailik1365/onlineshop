@@ -1,4 +1,4 @@
-package domain;
+package com.onlineshop.domain;
 
 public class Nomenclature {
 }
