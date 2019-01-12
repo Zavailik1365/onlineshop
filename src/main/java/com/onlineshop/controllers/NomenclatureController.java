@@ -1,8 +1,7 @@
-package com.onlineshop.controller;
+package com.onlineshop.controllers;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import com.onlineshop.domain.Nomenclature;
-import com.onlineshop.repository.NomenclatureRepo;
+import com.onlineshop.domains.Nomenclature;
+import com.onlineshop.repositorys.NomenclatureRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 

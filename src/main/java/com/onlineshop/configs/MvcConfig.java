@@ -1,4 +1,4 @@
-package com.onlineshop.config;
+package com.onlineshop.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
@@ -8,9 +8,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class MvcConfig implements WebMvcConfigurer {
 
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/home").setViewName("home");
-        registry.addViewController("/").setViewName("home");
-        registry.addViewController("/hello").setViewName("hello");
+        registry.addViewController("/online-shop").setViewName("online-shop");
+        registry.addViewController("/").setViewName("online-shop");
         registry.addViewController("/login").setViewName("login");
     }
 
