@@ -1,7 +1,7 @@
 package com.onlineshop.controllers;
 
-import com.onlineshop.domains.Nomenclature;
-import com.onlineshop.repositorys.NomenclatureRepo;
+import com.onlineshop.domain.Nomenclature;
+import com.onlineshop.repository.NomenclatureRepo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 

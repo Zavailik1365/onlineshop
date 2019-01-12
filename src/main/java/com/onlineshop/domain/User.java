@@ -1,4 +1,4 @@
-package com.onlineshop.domains;
+package com.onlineshop.domain;
 
 import lombok.Data;
 

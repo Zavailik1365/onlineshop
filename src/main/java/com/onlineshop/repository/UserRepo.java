@@ -1,6 +1,6 @@
-package com.onlineshop.repositorys;
+package com.onlineshop.repository;
 
-import com.onlineshop.domains.User;
+import com.onlineshop.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepo extends JpaRepository<User, Long> {
