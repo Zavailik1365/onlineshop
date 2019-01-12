@@ -19,6 +19,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
+
 	mavenCentral()
 }
 
@@ -29,7 +30,7 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.postgresql:postgresql'
 	compile 'org.projectlombok:lombok'
-	compile 'javax.xml.bind:jaxb-api'
-	compile 'com.sun.xml.bind:jaxb-core'
-	compile 'com.sun.xml.bind:jaxb-impl'
+	compile 'org.springframework.boot:spring-boot-starter-security'
+	compile 'org.springframework.boot:spring-boot-starter-thymeleaf' // TODO удалить после перехода на JS
+	compile 'org.springframework.boot:spring-boot-starter-security'
 }
