@@ -1,4 +1,4 @@
-package com.onlineshop.repository;
+package com.onlineshop.repositorys;
 
 import com.onlineshop.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

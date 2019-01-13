@@ -14,30 +14,54 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final DataSource dataSource;
+
     @Autowired
-    private DataSource dataSource;
+    public WebSecurityConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/onlineShop").permitAll()
-                .anyRequest().authenticated()
+                    .antMatchers("/online-shop", "/registration").permitAll()
+                    .anyRequest().authenticated()
                 .and()
-                .formLogin()
-                .loginPage("/login")
-                .permitAll()
+                    .formLogin()
+                    .loginPage("/login")
+                    .permitAll()
                 .and()
-                .logout()
-                .permitAll();
+                    .logout()
+                    .permitAll();
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+
+        String usersByUsernameQuery;
+        String authoritiesByUsernameQuery;
+
+        usersByUsernameQuery =
+                "SELECT" +
+                    " username," +
+                    " password," +
+                    " active" +
+                " FROM usr" +
+                " WHERE" +
+                    " username=?";
+
+        authoritiesByUsernameQuery =
+                "SELECT" +
+                    " usr.username," +
+                    " user_role.roles" +
+                " FROM usr usr inner join user_role user_role on" +
+                    " usr.id = user_role.user_id where usr.username=?";
+
         auth.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .usersByUsernameQuery("select username, password, active from usr where username=?")
-                .authoritiesByUsernameQuery("select u.username, ur.roles from usr u inner join user_role ur on u.id = ur.user_id where u.username=?");
+                .usersByUsernameQuery(usersByUsernameQuery)
+                .authoritiesByUsernameQuery(authoritiesByUsernameQuery);
     }
 }

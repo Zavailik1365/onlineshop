@@ -10,6 +10,6 @@ public class OnlineShopController {
 
     @GetMapping
     public String IndexPage() {
-        return "Перейти к покупке товаров";
+        return "onlineShop";
     }
 }
