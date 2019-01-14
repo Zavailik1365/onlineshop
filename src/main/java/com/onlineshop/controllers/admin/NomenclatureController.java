@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("admin/nomenclature")
+@RequestMapping("online-shop/admin/nomenclature")
 public class NomenclatureController {
 
     private final NomenclatureRepo nomenclatureRepo;
@@ -81,6 +81,7 @@ public class NomenclatureController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @DeleteMapping("{id}")
+    @ExceptionHandler(value = { Exception.class })
     public void delete(@PathVariable("id") Nomenclature nomenclatureFromDB) {
         nomenclatureRepo.delete(nomenclatureFromDB);
     }
