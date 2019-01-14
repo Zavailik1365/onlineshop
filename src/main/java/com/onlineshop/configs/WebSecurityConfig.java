@@ -24,16 +24,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                    .antMatchers("/online-shop", "/registration").permitAll()
-                    .anyRequest().authenticated()
-                .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .permitAll()
-                .and()
-                    .logout()
-                    .permitAll();
+            .authorizeRequests()
+                .antMatchers("/online-shop", "/registration").permitAll()
+                .antMatchers("/online-shop/admin/**").access("hasRole('ADMIN')")
+                .anyRequest().authenticated()
+            .and()
+                .exceptionHandling().accessDeniedPage("/403")
+            .and()
+                .formLogin()
+                .loginPage("/login")
+                .permitAll()
+            .and()
+                .logout()
+                .permitAll();
     }
 
     @Override
