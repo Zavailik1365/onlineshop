@@ -26,15 +26,12 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     runtimeOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    // JPA
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.postgresql:postgresql'
-    // Lombok
+    compile "com.zaxxer:HikariCP:${HikariVersion}"
     compile 'org.projectlombok:lombok'
-    // Security
     compile 'org.springframework.boot:spring-boot-starter-security'
-    compile 'org.springframework.boot:spring-boot-starter-thymeleaf' // TODO удалить после перехода на JS
-    // Swagger2
-    compile 'io.springfox:springfox-swagger2:2.7.0' // TODO разобраться как ставить версии
-    compile 'io.springfox:springfox-swagger-ui:2.7.0'
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile "io.springfox:springfox-swagger2:${swaggerVersion}"
+    compile "io.springfox:springfox-swagger-ui:${swaggerVersion}"
 }

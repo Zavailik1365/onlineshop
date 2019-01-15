@@ -1,4 +1,4 @@
-package com.onlineshop.controllers.admin;
+package com.onlineshop.controllers;
 
 import com.onlineshop.domain.Nomenclature;
 import com.onlineshop.repositorys.NomenclatureRepo;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("online-shop/admin/nomenclature")
+@RequestMapping("admin/nomenclature")
 public class NomenclatureController {
 
     private final NomenclatureRepo nomenclatureRepo;

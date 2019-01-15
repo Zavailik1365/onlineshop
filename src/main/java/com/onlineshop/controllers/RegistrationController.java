@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.Collections;
 
 @Controller //TODO переделать на рест контроллер
-@RequestMapping("online-shop/registration")
+@RequestMapping("registration")
 public class RegistrationController {
 
     private final UserRepo userRepo;

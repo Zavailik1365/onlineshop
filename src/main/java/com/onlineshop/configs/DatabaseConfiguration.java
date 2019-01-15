@@ -22,7 +22,7 @@ public class DatabaseConfiguration {
     @Value("${jdbc.password}")
     private String password;
 
-    @Bean(destroyMethod = "close")
+    @Bean
     public DataSource dataSource() {
         HikariConfig dataSourceConfig = new HikariConfig();
         dataSourceConfig.setDriverClassName(driverClassName);
