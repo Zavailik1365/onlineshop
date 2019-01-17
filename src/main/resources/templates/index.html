@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <meta charset="UTF-8">
+    <title>Online shop</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> <!--TODO переключится на прод скрипт-->
+    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
+    <script th:inline="javascript">
+        var frontendData = [[ ${frontendData} ]];
+    </script>
+</head>
+<body>
+Перейти к покупке товаров <a href="admin/nomenclature">Перейти</a>
+</body>
+</html>

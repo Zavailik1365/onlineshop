@@ -1,31 +1,29 @@
 package com.onlineshop.configs;
 
+import com.onlineshop.services.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-
-import javax.sql.DataSource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final DataSource dataSource;
+    @Autowired
+    private UserDetailService userSevice;
 
     @Autowired
-    public WebSecurityConfig(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+    private PasswordEncoder passwordEncoder;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/", "/registration")
+                .antMatchers("/", "/registration", "/js/**")
                     .permitAll()
                 .antMatchers("/admin/**")
                     .access("hasAnyAuthority('ADMIN')")
@@ -40,35 +38,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+            .and()
+                .csrf()
+                .disable(); // Придумать что делать с csrf
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-        String usersByUsernameQuery;
-        String authoritiesByUsernameQuery;
-
-        usersByUsernameQuery =
-                "SELECT" +
-                    " username," +
-                    " password," +
-                    " active" +
-                " FROM usr" +
-                " WHERE" +
-                    " username=?";
-
-        authoritiesByUsernameQuery =
-                "SELECT" +
-                    " usr.username," +
-                    " user_role.roles" +
-                " FROM usr usr inner join user_role user_role on" +
-                    " usr.id = user_role.user_id where usr.username=?";
-
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .usersByUsernameQuery(usersByUsernameQuery)
-                .authoritiesByUsernameQuery(authoritiesByUsernameQuery);
+        auth.userDetailsService(userSevice)
+                .passwordEncoder(passwordEncoder);
     }
 }
