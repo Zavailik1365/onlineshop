@@ -13,13 +13,13 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("com.onlineshop")
 public class DatabaseConfiguration {
-    @Value("${jdbc.driver}")
+    @Value("${jpa.driver}")
     private String driverClassName;
-    @Value("${jdbc.databaseUrl}")
+    @Value("${jpa.databaseUrl}")
     private String databaseUrl;
-    @Value("${jdbc.username}")
+    @Value("${jpa.username}")
     private String userName;
-    @Value("${jdbc.password}")
+    @Value("${jpa.password}")
     private String password;
 
     @Bean

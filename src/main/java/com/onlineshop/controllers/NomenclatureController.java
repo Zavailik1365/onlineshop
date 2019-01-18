@@ -1,7 +1,7 @@
 package com.onlineshop.controllers;
 
-import com.onlineshop.domain.Nomenclature;
-import com.onlineshop.repositorys.NomenclatureRepo;
+import com.onlineshop.dao.entitys.Nomenclature;
+import com.onlineshop.dao.jpa.NomenclatureDao;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -14,10 +14,10 @@ import java.util.List;
 @RequestMapping("admin/nomenclature")
 public class NomenclatureController {
 
-    private final NomenclatureRepo nomenclatureRepo;
+    private final NomenclatureDao nomenclatureDao;
 
-    public NomenclatureController(NomenclatureRepo nomenclatureRepo) {
-        this.nomenclatureRepo = nomenclatureRepo;
+    public NomenclatureController(NomenclatureDao nomenclatureDao) {
+        this.nomenclatureDao = nomenclatureDao;
     }
 
     @ApiOperation(
@@ -32,7 +32,7 @@ public class NomenclatureController {
     })
     @GetMapping
     public List<Nomenclature> list() {
-        return nomenclatureRepo.findAll();
+        return nomenclatureDao.findAll();
     }
 
     @ApiOperation(
@@ -46,7 +46,7 @@ public class NomenclatureController {
     })
     @PostMapping
     public Nomenclature create(@RequestBody Nomenclature nomenclature) {
-        return nomenclatureRepo.save(nomenclature);
+        return nomenclatureDao.save(nomenclature);
     }
 
     @ApiOperation(
@@ -68,7 +68,7 @@ public class NomenclatureController {
                 nomenclatureFromDB,
                 "id");
 
-        return nomenclatureRepo.save(nomenclatureFromDB);
+        return nomenclatureDao.save(nomenclatureFromDB);
     }
 
     @ApiOperation(
@@ -83,6 +83,6 @@ public class NomenclatureController {
     @DeleteMapping("{id}")
     @ExceptionHandler(value = { Exception.class })
     public void delete(@PathVariable("id") Nomenclature nomenclatureFromDB) {
-        nomenclatureRepo.delete(nomenclatureFromDB);
+        nomenclatureDao.delete(nomenclatureFromDB);
     }
 }

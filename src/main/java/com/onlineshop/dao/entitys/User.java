@@ -1,4 +1,4 @@
-package com.onlineshop.domain;
+package com.onlineshop.dao.entitys;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
