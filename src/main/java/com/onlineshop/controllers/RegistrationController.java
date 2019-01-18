@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("registration")
 public class RegistrationController {
 
-    private final UserDetailService userSevice;
+    private final UserDetailService userService;
 
     @Autowired
-    public RegistrationController(UserDetailService userSevice) {
-        this.userSevice = userSevice;
+    public RegistrationController(UserDetailService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
@@ -27,7 +27,7 @@ public class RegistrationController {
     @PostMapping
     public String addNewUser(User user) {
 
-        userSevice.addUser(user); //TODO если пользователь с таким именен ужеть необходимо выдать сообщение об ошибке
+        userService.addUser(user); //TODO если пользователь с таким именен ужеть необходимо выдать сообщение об ошибке
         return "redirect:login";
     }
 }
