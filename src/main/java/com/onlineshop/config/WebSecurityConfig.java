@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/static/**")
                     .permitAll()
                 .antMatchers("/admin/**")
-                    .access("hasRole('ROLE_ADMIN')") // TODO не рабоает ограничение по ролям
+                    .access("hasRole('ROLE_ADMIN')")
                 .anyRequest()
                     .authenticated()
             .and()

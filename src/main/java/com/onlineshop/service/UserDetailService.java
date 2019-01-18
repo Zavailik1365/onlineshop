@@ -16,11 +16,14 @@ import java.util.Collections;
 @Service
 public class UserDetailService implements UserDetailsService {
 
-    @Autowired
-    private UserDao userDao;
+    private final UserDao userDao;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserDetailService(PasswordEncoder passwordEncoder, UserDao userDao) {
+        this.passwordEncoder = passwordEncoder;
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
