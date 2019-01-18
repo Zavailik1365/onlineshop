@@ -1,4 +1,4 @@
-package com.onlineshop.controllers;
+package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.Nomenclature;
 import com.onlineshop.dao.jpa.NomenclatureDao;

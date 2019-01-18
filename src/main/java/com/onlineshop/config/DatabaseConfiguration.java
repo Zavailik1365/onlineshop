@@ -1,4 +1,4 @@
-package com.onlineshop.configs;
+package com.onlineshop.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;

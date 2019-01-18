@@ -1,7 +1,7 @@
-package com.onlineshop.controllers;
+package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.User;
-import com.onlineshop.services.UserDetailService;
+import com.onlineshop.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

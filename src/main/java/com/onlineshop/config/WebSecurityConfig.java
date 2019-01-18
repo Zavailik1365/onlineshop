@@ -1,7 +1,6 @@
-package com.onlineshop.configs;
+package com.onlineshop.config;
 
-import com.onlineshop.dao.entitys.Role;
-import com.onlineshop.services.UserDetailService;
+import com.onlineshop.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

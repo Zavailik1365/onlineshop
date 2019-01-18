@@ -1,4 +1,4 @@
-package com.onlineshop.controllers;
+package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.User;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

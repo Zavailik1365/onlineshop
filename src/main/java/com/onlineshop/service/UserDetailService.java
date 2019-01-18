@@ -1,4 +1,4 @@
-package com.onlineshop.services;
+package com.onlineshop.service;
 
 import com.onlineshop.dao.entitys.Role;
 import com.onlineshop.dao.entitys.User;
