@@ -1,4 +1,4 @@
-package com.onlineshop.dao.entitys;
+package com.onlineshop.rest.dao.entitys;
 
 import lombok.Data;
 import lombok.NonNull;

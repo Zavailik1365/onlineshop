@@ -1,4 +1,4 @@
-package com.onlineshop.dto;
+package com.onlineshop.rest.dto;
 
 import lombok.Data;
 
