@@ -11,7 +11,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@Api(description = "Работа с номенклатурой", consumes = "application/json")
+@Api(description = "Работа с номенклатурой",
+        consumes = "application/json")
 public class NomenclatureController {
 
     private final  NomenclatureService nomenclatureService;
@@ -31,7 +32,7 @@ public class NomenclatureController {
             @ApiResponse(code = 403, message = "отсутствуют права на редактирование номенклатуры"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/nomenclatures")
+    @GetMapping("nomenclatures")
     public List<Nomenclature> list() {
         return nomenclatureService.findAll();
     }
@@ -46,7 +47,8 @@ public class NomenclatureController {
             @ApiResponse(code = 403, message = "отсутствуют права на получение номенклатуры"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/nomenclatures/{id}")
+    @GetMapping("nomenclatures/{id}")
+    @ResponseBody
     public Nomenclature nomenclature(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id)
                 throws NomenclatureIdNotFound {
@@ -62,7 +64,7 @@ public class NomenclatureController {
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PostMapping("/admin/nomenclatures")
+    @PostMapping("admin/nomenclatures")
     public Nomenclature nomenclatureCreate(@RequestBody Nomenclature nomenclature) {
         return nomenclatureService.create(nomenclature);
     }
@@ -77,7 +79,8 @@ public class NomenclatureController {
             @ApiResponse(code = 404, message = "номенклатура по идентификатору не найдена"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PutMapping("/admin/nomenclatures/{id}")
+    @PutMapping("admin/nomenclatures/{id}")
+    @ResponseBody
     public Nomenclature nomenclatureUpdate(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") Nomenclature nomenclatureFromDB,
@@ -96,8 +99,9 @@ public class NomenclatureController {
             @ApiResponse(code = 404, message = "номенклатура по идентификатору не найдена"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @DeleteMapping("/admin/nomenclatures/{id}")
+    @DeleteMapping("admin/nomenclatures/{id}")
     @ExceptionHandler(value = { Exception.class })
+    @ResponseBody
     public void nomenclatureDelete(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") Nomenclature nomenclatureFromDB)

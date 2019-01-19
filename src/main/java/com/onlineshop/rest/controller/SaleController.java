@@ -14,7 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@Api(description = "Работа с продажами", consumes = "application/json")
+@Api(description = "Работа с продажами",
+        consumes = "application/json")
 public class SaleController {
 
     private final SaleService saleService;
@@ -34,7 +35,7 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на получение списка всех продаж продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/admin/sales")
+    @GetMapping("admin/sales")
     public List<SaleResponse> salesList() {
         return saleService.findAll();
     }
@@ -49,7 +50,7 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/sale")
+    @GetMapping("sale")
     public List<SaleResponse> listByUser() {
         return saleService.findByUser();
     }
@@ -65,7 +66,8 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/admin/sale/{id}")
+    @GetMapping("admin/sale/{id}")
+    @ResponseBody
     public SaleResponse getSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id)
             throws SaleNotFound {
@@ -83,7 +85,8 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PostMapping("/sale")
+    @PostMapping("sale")
+    @ResponseBody
     public SaleResponse createNewSale(@RequestBody SaleRequest saleRequest)
             throws NomenclatureIdNotFound {
         return saleService.createNewSales(saleRequest);
@@ -101,6 +104,7 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping("admin/sale/{id}")
+    @ResponseBody
     public SaleResponse updateSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB,
@@ -121,6 +125,7 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @DeleteMapping("admin/sale/{id}")
+    @ResponseBody
     public void deleteSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB)

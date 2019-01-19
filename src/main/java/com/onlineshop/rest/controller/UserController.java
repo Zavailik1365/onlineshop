@@ -12,7 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping
-@Api(description = "Работа с пользователями", consumes = "application/json")
+@Api(description = "Работа с пользователями",
+        consumes = "application/json")
 public class UserController {
 
     private final UserDetailService userDetailService;
@@ -31,7 +32,7 @@ public class UserController {
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/admin/users")
+    @GetMapping("admin/users")
     public List<UserResponse> usersList() {
         return userDetailService.findAll();
     }
@@ -46,7 +47,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("/users/{id}")
+    @GetMapping("admin/users/{id}")
+    @ResponseBody
     public UserResponse usersById(
             @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id)
             throws UserNotFound {
@@ -63,7 +65,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "недостаточно прав для создания новго пользователя"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PostMapping("/admin/user")
+    @PostMapping("admin/user")
     public UserResponse userCreate(@RequestBody User user) {
         return userDetailService.create(user);
     }
@@ -78,7 +80,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PutMapping("/admin/user/{id}")
+    @PutMapping("admin/user/{id}")
+    @ResponseBody
     public UserResponse nomenclatureUpdate(
             @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id,
             @PathVariable("id") User nomenclatureFromDB,
@@ -97,8 +100,9 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @DeleteMapping("/admin/user/{id}")
+    @DeleteMapping("admin/user/{id}")
     @ExceptionHandler(value = { Exception.class })
+    @ResponseBody
     public void nomenclatureDelete(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") User nomenclatureFromDB)
