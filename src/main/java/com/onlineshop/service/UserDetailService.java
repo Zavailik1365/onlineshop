@@ -4,6 +4,8 @@ import com.onlineshop.dao.entitys.Role;
 import com.onlineshop.dao.entitys.User;
 import com.onlineshop.dao.jpa.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +13,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-
 
 @Service
 public class UserDetailService implements UserDetailsService {
@@ -50,5 +51,20 @@ public class UserDetailService implements UserDetailsService {
         userDao.save(user);
 
         return true;
+    }
+
+    public User getAuthenticationUser() {
+         return (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+    }
+
+    public String getAuthenticationUserName() {
+        return ((User) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal())
+                    .getUsername();
     }
 }

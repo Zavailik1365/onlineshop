@@ -15,11 +15,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailService userService;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationEntryPoint authEntryPoint;
 
     @Autowired
-    public WebSecurityConfig(UserDetailService userService, PasswordEncoder passwordEncoder) {
+    public WebSecurityConfig(UserDetailService userService, PasswordEncoder passwordEncoder, AuthenticationEntryPoint authEntryPoint) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.authEntryPoint = authEntryPoint;
     }
 
     @Override
@@ -28,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/",
                         "/registration",
-                        "/static/**")
+                        "/static/js/**")
                     .permitAll()
                 .antMatchers("/admin/**")
                     .access("hasRole('ROLE_ADMIN')")
@@ -44,7 +46,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .csrf()
-                .disable(); // TODO Придумать что делать с csrf
+                .disable() // TODO Придумать что делать с csrf
+                .httpBasic()
+                .authenticationEntryPoint(authEntryPoint); // TODO разобраться с authEntryPoint
     }
 
     @Override
