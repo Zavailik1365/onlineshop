@@ -79,9 +79,9 @@ public class NomenclatureController {
             @ApiResponse(code = 404, message = "номенклатура по идентификатору не найдена"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PutMapping("admin/nomenclatures/{id}")
+    @PutMapping("admin/nomenclature/{id}")
     @ResponseBody
-    public Nomenclature nomenclatureUpdate(
+    public Nomenclature nomenclatureUpdateById(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") Nomenclature nomenclatureFromDB,
             @RequestBody Nomenclature nomenclature)
