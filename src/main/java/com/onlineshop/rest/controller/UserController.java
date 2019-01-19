@@ -97,7 +97,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @DeleteMapping("/admin/nomenclatures/{id}")
+    @DeleteMapping("/admin/user/{id}")
     @ExceptionHandler(value = { Exception.class })
     public void nomenclatureDelete(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,

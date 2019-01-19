@@ -27,7 +27,7 @@ public class OnlineShopApplication {
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.onlineshop"))
+                .apis(RequestHandlerSelectors.basePackage("com.onlineshop.rest"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
