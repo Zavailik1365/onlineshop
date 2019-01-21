@@ -48,7 +48,6 @@ public class NomenclatureController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping("nomenclatures/{id}")
-    @ResponseBody
     public Nomenclature nomenclature(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id)
                 throws NomenclatureIdNotFound {
@@ -101,7 +100,6 @@ public class NomenclatureController {
     })
     @DeleteMapping("admin/nomenclatures/{id}")
     @ExceptionHandler(value = { Exception.class })
-    @ResponseBody
     public void nomenclatureDelete(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") Nomenclature nomenclatureFromDB)

@@ -67,7 +67,6 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping("admin/sale/{id}")
-    @ResponseBody
     public SaleResponse getSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id)
             throws SaleNotFound {
@@ -86,7 +85,6 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PostMapping("sale")
-    @ResponseBody
     public SaleResponse createNewSale(@RequestBody SaleRequest saleRequest)
             throws NomenclatureIdNotFound {
         return saleService.createNewSales(saleRequest);
@@ -104,7 +102,6 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping("admin/sale/{id}")
-    @ResponseBody
     public SaleResponse updateSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB,
@@ -125,7 +122,6 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @DeleteMapping("admin/sale/{id}")
-    @ResponseBody
     public void deleteSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB)

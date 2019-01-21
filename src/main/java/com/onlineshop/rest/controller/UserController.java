@@ -48,7 +48,6 @@ public class UserController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping("admin/users/{id}")
-    @ResponseBody
     public UserResponse usersById(
             @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id)
             throws UserNotFound {
@@ -81,7 +80,6 @@ public class UserController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping("admin/user/{id}")
-    @ResponseBody
     public UserResponse nomenclatureUpdate(
             @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id,
             @PathVariable("id") User nomenclatureFromDB,
@@ -102,7 +100,6 @@ public class UserController {
     })
     @DeleteMapping("admin/user/{id}")
     @ExceptionHandler(value = { Exception.class })
-    @ResponseBody
     public void nomenclatureDelete(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") User nomenclatureFromDB)
