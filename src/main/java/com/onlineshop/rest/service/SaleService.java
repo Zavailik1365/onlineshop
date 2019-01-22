@@ -1,14 +1,20 @@
 package com.onlineshop.rest.service;
 
+import com.onlineshop.rest.dao.entitys.Nomenclature;
 import com.onlineshop.rest.dao.entitys.Sale;
+import com.onlineshop.rest.dao.entitys.SaleItem;
 import com.onlineshop.rest.dao.jpa.SaleDao;
+import com.onlineshop.rest.dao.jpa.SaleItemDao;
+import com.onlineshop.rest.dto.ItemRequest;
 import com.onlineshop.rest.dto.SaleRequest;
 import com.onlineshop.rest.dto.SaleResponse;
 import com.onlineshop.rest.exception.NomenclatureIdNotFound;
+import com.onlineshop.rest.exception.NomenclatureIdNotFoundList;
 import com.onlineshop.rest.exception.SaleNotFound;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +25,46 @@ public class SaleService {
     private final SaleDao saleDao;
     private final NomenclatureService nomenclatureService;
     private final UserDetailService userDetailService;
+    private final SaleItemDao saleItemDao;
 
     @Autowired
-    public SaleService(SaleDao saleDao,
-                       NomenclatureService nomenclatureService,
-                       UserDetailService userDetailService) {
+    public SaleService(SaleDao saleDao, NomenclatureService nomenclatureService, UserDetailService userDetailService, SaleItemDao saleItemDao) {
         this.saleDao = saleDao;
         this.nomenclatureService = nomenclatureService;
         this.userDetailService = userDetailService;
+        this.saleItemDao = saleItemDao;
     }
 
-    public SaleResponse createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound {
-        Sale sale = new Sale(
-                userDetailService.getAuthenticationUser(),
-                nomenclatureService.findById(
-                    saleRequest.getNomenclature_id()),
-                saleRequest.getAmount());
-        return createSaleResponse(sale);
+
+    public void createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
+
+        Sale sale = new Sale();
+
+        List<SaleItem> saleItemList = new  ArrayList<>();
+        List<String> errors = new ArrayList<>();
+
+        for (ItemRequest item:saleRequest.getItems()){
+
+            Nomenclature nomenclature = nomenclatureService.findById(
+                    item.getNomenclature_id());
+
+            if (nomenclature == null) {
+                errors.add(NomenclatureIdNotFoundList.newMessage(item.getNomenclature_id()));
+            }else {
+                saleItemList.add(
+                        new SaleItem(
+                                nomenclature,
+                                item.getAmount(),
+                                sale));
+            }
+        }
+
+       if(!errors.isEmpty()){
+           throw new NomenclatureIdNotFoundList(errors);
+       }
+
+       sale.setUser(userDetailService.getAuthenticationUser());
+       saveSaleItems(sale, saleItemList);
     }
 
     public List<SaleResponse> findAll() {
@@ -63,7 +92,7 @@ public class SaleService {
         return createSaleResponseList(saleList);
     }
 
-    public SaleResponse updateById(
+    public void updateById(
             long id,
             Sale saleFromDB,
             Sale sale)
@@ -78,7 +107,6 @@ public class SaleService {
                 saleFromDB,
                 "id");
         saleDao.save(sale);
-        return createSaleResponse(sale);
     }
 
     public void deleteById(
@@ -106,10 +134,17 @@ public class SaleService {
 
     private SaleResponse createSaleResponse(Sale sale) {
 
-        return new SaleResponse(
-                sale.getNomenclature().getName(),
-                sale.getNomenclature().getDescription(),
-                sale.getAmount(),
-                sale.getUser().getUsername());
+//        return new SaleResponse(
+//                sale.getSaleItems(),
+//                sale.getUser().getUsername());
+        return new SaleResponse();
+    }
+
+    @Transactional
+    public void saveSaleItems(Sale sale, List<SaleItem> saleItems) {
+        for (SaleItem saleItem: saleItems){
+            saleItemDao.save(saleItem);
+        }
+        saleDao.save(sale);
     }
 }

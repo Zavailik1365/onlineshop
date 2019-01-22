@@ -1,27 +1,28 @@
 var nomenclatureAPI = Vue.resource("/rest-api/nomenclatures");
+var saleAPI = Vue.resource("/rest-api/sale");
 
 Vue.component('nomenclature-form', {
     props:['nomenclatures'],
     data: function() {
         return {
+            id: '',
             name: '',
-            description: ''
+            description: '',
+            amount: ''
         }
     },
     template: '<div>' +
-        '<input type="text" placeholder="Write name" v-model="name"/>' +
-        '<input type="text" placeholder="Write description" v-model="description"/>' +
-        '<input type="button" value="Save" @click="save"/>' +
+        '<input type="button" value="Купить" @click="save"/>' +
         '</div>',
     methods: {
         save: function () {
             var nomenclature = {
-                name: this.name,
-                description: this.description
+                id: this.id,
+                amount: this.amount
             }
 
-            nomenclatureAPI.save({}, nomenclature).then(data=>{
-                this.nomenclatures.push(data);
+            saleAPI.save({}, nomenclature).then(data=>{
+                this.saleAPI.push(data);
             })
         }
     }
@@ -34,6 +35,7 @@ Vue.component('nomenclature-row', {
         '   <b>{{ nomenclature.id }}</b>\n' +
         '   {{ nomenclature.name }}\n' +
         '   {{ nomenclature.description }}\n' +
+        '   <input type="text" placeholder="Количество товара" v-model="amount"/>' +
         '</div>'
 });
 

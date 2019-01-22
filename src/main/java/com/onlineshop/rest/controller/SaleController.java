@@ -10,6 +10,7 @@ import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -35,7 +36,7 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на получение списка всех продаж продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("admin/sales")
+    @GetMapping(value = "rest-api/admin/sales")
     public List<SaleResponse> salesList() {
         return saleService.findAll();
     }
@@ -50,7 +51,7 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("sale")
+    @GetMapping(value = "rest-api/sale")
     public List<SaleResponse> listByUser() {
         return saleService.findByUser();
     }
@@ -66,7 +67,7 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("admin/sale/{id}")
+    @GetMapping(value = "rest-api/admin/sale/{id}")
     public SaleResponse getSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id)
             throws SaleNotFound {
@@ -84,10 +85,10 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PostMapping("sale")
-    public SaleResponse createNewSale(@RequestBody SaleRequest saleRequest)
+    @PostMapping(value = "rest-api/sale")
+    public void createNewSale(@RequestBody @Valid SaleRequest saleRequest)
             throws NomenclatureIdNotFound {
-        return saleService.createNewSales(saleRequest);
+        saleService.createNewSales(saleRequest);
     }
 
     @ApiOperation(
@@ -101,13 +102,13 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на обновление продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PutMapping("admin/sale/{id}")
-    public SaleResponse updateSaleById(
+    @PutMapping(value = "rest-api/admin/sale/{id}")
+    public void updateSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB,
-            @RequestBody Sale sale)
+            @RequestBody @Valid Sale sale)
             throws SaleNotFound {
-        return saleService.updateById(id, saleFromDB, sale);
+        saleService.updateById(id, saleFromDB, sale);
     }
 
     @ApiOperation(
@@ -121,7 +122,7 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на удаление продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @DeleteMapping("admin/sale/{id}")
+    @DeleteMapping(value = "rest-api/admin/sale/{id}")
     public void deleteSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB)

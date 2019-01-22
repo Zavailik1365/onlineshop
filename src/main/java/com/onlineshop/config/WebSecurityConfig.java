@@ -30,7 +30,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
                 .antMatchers("/",
                         "/registration",
-                        "/static/js/**")
+                        "/js/**")
                     .permitAll()
                 .antMatchers("/admin/**")
                     .access("hasRole('ROLE_ADMIN')")
@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable() // TODO Придумать что делать с csrf
                 .httpBasic()
-                .authenticationEntryPoint(authEntryPoint); // TODO разобраться с authEntryPoint
+                .authenticationEntryPoint(authEntryPoint);
     }
 
     @Override

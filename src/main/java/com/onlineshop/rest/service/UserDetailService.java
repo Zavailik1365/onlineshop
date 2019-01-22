@@ -4,6 +4,7 @@ import com.onlineshop.rest.dao.entitys.Role;
 import com.onlineshop.rest.dao.entitys.User;
 import com.onlineshop.rest.dao.jpa.UserDao;
 import com.onlineshop.rest.dto.UserResponse;
+import com.onlineshop.rest.exception.UserAlreadyExist;
 import com.onlineshop.rest.exception.UserNotFound;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,11 @@ public class UserDetailService implements UserDetailsService {
         return user;
     }
 
-    public void addUser(User user) {
+    public UserResponse addUser(User user) throws UserAlreadyExist {
         User userFromDb = userDao.findByUsername(user.getUsername());
 
         if (userFromDb != null) {
-            return;
+            throw new UserAlreadyExist(userFromDb.getUsername());
         }
 
         user.setActive(true);
@@ -54,6 +55,11 @@ public class UserDetailService implements UserDetailsService {
 
         userDao.save(user);
 
+        return new UserResponse(
+                user.getUsername(),
+                user.getId(),
+                user.isActive(),
+                user.getRoles());
     }
 
     public User getAuthenticationUser() {
@@ -82,9 +88,7 @@ public class UserDetailService implements UserDetailsService {
         return userResponseList;
     }
 
-    public UserResponse findById(long id) throws UserNotFound {
-
-        User user = userDao.findById(id);
+    public UserResponse findById(long id, User user) throws UserNotFound {
 
         if (user == null) {
             throw new UserNotFound(id);
@@ -97,22 +101,8 @@ public class UserDetailService implements UserDetailsService {
                     user.getRoles());
     }
 
-    public UserResponse create(User user){
 
-        userDao.save(user);
-
-        return new UserResponse(
-                user.getUsername(),
-                user.getId(),
-                user.isActive(),
-                user.getRoles());
-    }
-
-    public UserResponse update(
-            long id,
-            User userFromDB,
-            User user)
-            throws UserNotFound {
+    public UserResponse update(long id, User userFromDB, User user) throws UserNotFound {
 
         if (userFromDB == null) {
             throw new UserNotFound(id);

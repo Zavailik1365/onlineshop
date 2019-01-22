@@ -2,12 +2,14 @@ package com.onlineshop.rest.controller;
 
 import com.onlineshop.rest.dao.entitys.User;
 import com.onlineshop.rest.dto.UserResponse;
+import com.onlineshop.rest.exception.UserAlreadyExist;
 import com.onlineshop.rest.exception.UserNotFound;
 import com.onlineshop.rest.service.UserDetailService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +34,7 @@ public class UserController {
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("admin/users")
+    @GetMapping(value = "rest-api/admin/users")
     public List<UserResponse> usersList() {
         return userDetailService.findAll();
     }
@@ -47,11 +49,12 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping("admin/users/{id}")
-    public UserResponse usersById(
-            @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id)
+    @GetMapping(value = "rest-api/admin/users/{id}")
+    public UserResponse userById(
+            @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id,
+            @PathVariable("id") @Valid  User user)
             throws UserNotFound {
-        return userDetailService.findById(id);
+        return userDetailService.findById(id, user);
     }
 
     @ApiOperation(
@@ -64,9 +67,9 @@ public class UserController {
             @ApiResponse(code = 403, message = "недостаточно прав для создания новго пользователя"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PostMapping("admin/user")
-    public UserResponse userCreate(@RequestBody User user) {
-        return userDetailService.create(user);
+    @PostMapping(value = "rest-api/admin/user")
+    public UserResponse userCreate(@RequestBody @Valid User user) throws UserAlreadyExist {
+        return userDetailService.addUser(user);
     }
 
     @ApiOperation(
@@ -79,13 +82,13 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @PutMapping("admin/user/{id}")
-    public UserResponse nomenclatureUpdate(
+    @PutMapping(value = "rest-api/admin/user/{id}")
+    public UserResponse userUpdate(
             @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id,
-            @PathVariable("id") User nomenclatureFromDB,
-            @RequestBody User nomenclature)
+            @PathVariable("id") User userFromDB,
+            @RequestBody @Valid User user)
             throws UserNotFound {
-        return userDetailService.update(id, nomenclatureFromDB, nomenclature);
+        return userDetailService.update(id, userFromDB, user);
     }
 
     @ApiOperation(
@@ -98,9 +101,8 @@ public class UserController {
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @DeleteMapping("admin/user/{id}")
-    @ExceptionHandler(value = { Exception.class })
-    public void nomenclatureDelete(
+    @DeleteMapping(value = "rest-api/admin/user/{id}")
+    public void userDelete(
             @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
             @PathVariable("id") User nomenclatureFromDB)
             throws UserNotFound {

@@ -6,8 +6,10 @@
 </head>
 <body>
 <form th:action="@{/registration}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
+    <div><label> Логин : <input type="text" name="username"/> </label></div>
+    <div><label> Полное имя: <input type="text" name="password"/> </label></div>
+    <div><label> Пароль: <input type="password" name="fullname"/> </label></div>
+    <div><label> Email: <input type="text" name="email" pattern="([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})"/> </label></div>
     <div><input type="submit" value="Add user"/></div>
 </form>
 </body>

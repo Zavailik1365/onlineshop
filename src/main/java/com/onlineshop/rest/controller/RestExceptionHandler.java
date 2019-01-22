@@ -2,6 +2,7 @@ package com.onlineshop.rest.controller;
 
 import com.onlineshop.rest.exception.NomenclatureIdNotFound;
 import com.onlineshop.rest.exception.SaleNotFound;
+import com.onlineshop.rest.exception.UserAlreadyExist;
 import com.onlineshop.rest.exception.UserNotFound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,10 @@ public class RestExceptionHandler {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(RestExceptionHandler.class);
 
-    @ExceptionHandler({NomenclatureIdNotFound.class, UserNotFound.class, SaleNotFound.class})
+    @ExceptionHandler({NomenclatureIdNotFound.class,
+            UserNotFound.class,
+            SaleNotFound.class,
+            UserAlreadyExist.class})
     public ResponseEntity<ExceptionResponse> handleEntityNotFoundExceptionException(Exception exception) {
         LOGGER.warn(exception.getMessage());
         ExceptionResponse response = new ExceptionResponse();
@@ -28,10 +32,6 @@ public class RestExceptionHandler {
 
     class ExceptionResponse {
         private List<String> errors;
-
-        public List<String> getErrors() {
-            return errors;
-        }
 
         public void setErrors(List<String> errors) {
             this.errors = errors;

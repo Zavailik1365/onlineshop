@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 @Entity
 @Table(name = "Sales")
@@ -18,20 +19,11 @@ public class Sale {
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
 
-    @NonNull
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Nomenclature nomenclature;
-
-    @NonNull
-    private long amount;
-
     public Sale() {
 
     }
 
-    public Sale(@NonNull User user, @NonNull Nomenclature nomenclature, long amount){
+    public Sale(@NonNull User user){
         this.user = user;
-        this.nomenclature = nomenclature;
-        this.amount = amount;
     }
 }
