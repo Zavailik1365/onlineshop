@@ -11,7 +11,6 @@ import com.onlineshop.rest.dto.SaleResponse;
 import com.onlineshop.rest.exception.NomenclatureIdNotFound;
 import com.onlineshop.rest.exception.NomenclatureIdNotFoundList;
 import com.onlineshop.rest.exception.SaleNotFound;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,37 +34,9 @@ public class SaleService {
         this.saleItemDao = saleItemDao;
     }
 
-
-    public void createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
-
-        Sale sale = new Sale();
-
-        List<SaleItem> saleItemList = new  ArrayList<>();
-        List<String> errors = new ArrayList<>();
-
-        for (ItemRequest item:saleRequest.getItems()){
-
-            Nomenclature nomenclature = nomenclatureService.findById(
-                    item.getNomenclature_id());
-
-            if (nomenclature == null) {
-                errors.add(NomenclatureIdNotFoundList.newMessage(item.getNomenclature_id()));
-            }else {
-                saleItemList.add(
-                        new SaleItem(
-                                nomenclature,
-                                item.getAmount(),
-                                sale));
-            }
-        }
-
-       if(!errors.isEmpty()){
-           throw new NomenclatureIdNotFoundList(errors);
-       }
-
-       sale.setUser(userDetailService.getAuthenticationUser());
-       saveSaleItems(sale, saleItemList);
-    }
+    /**
+     * Обработка запросов клиентов
+     */
 
     public List<SaleResponse> findAll() {
 
@@ -92,21 +63,29 @@ public class SaleService {
         return createSaleResponseList(saleList);
     }
 
+    public void createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
+
+        Sale sale = new Sale();
+        List<SaleItem> saleItemList = newSaleItemList(sale, saleRequest);
+        sale.setUser(userDetailService.getAuthenticationUser());
+
+        saveSale(sale, saleItemList);
+    }
+
     public void updateById(
             long id,
             Sale saleFromDB,
-            Sale sale)
-                throws SaleNotFound {
+            SaleRequest saleRequest)
+            throws SaleNotFound, NomenclatureIdNotFoundList, NomenclatureIdNotFound {
 
         if (saleFromDB == null) {
             throw new SaleNotFound(id);
         }
 
-        BeanUtils.copyProperties(
-                sale,
-                saleFromDB,
-                "id");
-        saleDao.save(sale);
+        List<SaleItem> saleItemList = newSaleItemList(saleFromDB, saleRequest);
+        List<SaleItem> saleItemDeleteList = saleItemDao.findBySale(saleFromDB);
+
+        updateSale(saleFromDB, saleItemList, saleItemDeleteList);
     }
 
     public void deleteById(
@@ -117,9 +96,78 @@ public class SaleService {
         if (saleFromDB == null) {
             throw new SaleNotFound(id);
         }
-        saleDao.delete(saleFromDB);
+
+        List<SaleItem> saleItemDeleteList = saleItemDao.findBySale(saleFromDB);
+        deleteSale(saleFromDB, saleItemDeleteList);
     }
 
+
+    /**
+     * Сохранение и обновление данных продаж в информационной базе.
+     */
+
+    @Transactional
+    public void saveSale(Sale sale, List<SaleItem> saleItemList) {
+        saleDao.save(sale);
+        for (SaleItem saleItem : saleItemList) {
+            saleItemDao.save(saleItem);
+        }
+    }
+
+    @Transactional
+    public void updateSale(Sale sale, List<SaleItem> saleItemList, List<SaleItem> saleItemDeleteList) {
+
+        for (SaleItem saleItem : saleItemDeleteList) {
+            saleItemDao.delete(saleItem);
+        }
+
+        for (SaleItem saleItem : saleItemList) {
+            saleItemDao.save(saleItem);
+        }
+
+        saleDao.save(sale);
+    }
+
+    @Transactional
+    public void deleteSale(Sale sale, List<SaleItem> saleItemDeleteList) {
+        for (SaleItem saleItem : saleItemDeleteList) {
+            saleItemDao.delete(saleItem);
+        }
+        saleDao.delete(sale);
+    }
+
+    /**
+     * Служебные методы класса.
+     */
+
+    private List<SaleItem> newSaleItemList(Sale sale, SaleRequest saleRequest)
+            throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
+
+        List<SaleItem> saleItemList = new ArrayList<>();
+        List<String> errors = new ArrayList<>();
+
+        for (ItemRequest item : saleRequest.getItems()) {
+
+            Nomenclature nomenclature = nomenclatureService.findById(
+                    item.getNomenclature_id());
+
+            if (nomenclature == null) {
+                errors.add(NomenclatureIdNotFoundList.newMessage(item.getNomenclature_id()));
+            } else {
+                saleItemList.add(
+                        new SaleItem(
+                                nomenclature,
+                                item.getAmount(),
+                                sale));
+            }
+        }
+
+        if (!errors.isEmpty()) {
+            throw new NomenclatureIdNotFoundList(errors);
+        }
+
+        return saleItemList;
+    }
 
     private List<SaleResponse> createSaleResponseList(List saleList) {
 
@@ -133,18 +181,8 @@ public class SaleService {
     }
 
     private SaleResponse createSaleResponse(Sale sale) {
-
-//        return new SaleResponse(
-//                sale.getSaleItems(),
-//                sale.getUser().getUsername());
-        return new SaleResponse();
-    }
-
-    @Transactional
-    public void saveSaleItems(Sale sale, List<SaleItem> saleItems) {
-        for (SaleItem saleItem: saleItems){
-            saleItemDao.save(saleItem);
-        }
-        saleDao.save(sale);
+        return new SaleResponse(
+                sale.getId(),
+                sale.getUser().getUsername());
     }
 }

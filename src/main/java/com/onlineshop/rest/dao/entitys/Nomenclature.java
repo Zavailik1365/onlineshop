@@ -29,19 +29,13 @@ public class Nomenclature {
     @Size(min = 1)
     private String description;
 
-    /**
-     * Признак доступности номенклатуры для покупки.
-     */
-    private boolean isActive;
-
     public Nomenclature() {
 
     }
 
-    public Nomenclature(@NonNull String name, @NonNull String description, boolean isActive) {
+    public Nomenclature(@NonNull String name, @NonNull String description) {
         this.name = name;
         this.description = description;
-        this.isActive = isActive;
     }
 
 

@@ -1,9 +1,6 @@
 package com.onlineshop.rest.controller;
 
-import com.onlineshop.rest.exception.NomenclatureIdNotFound;
-import com.onlineshop.rest.exception.SaleNotFound;
-import com.onlineshop.rest.exception.UserAlreadyExist;
-import com.onlineshop.rest.exception.UserNotFound;
+import com.onlineshop.rest.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -22,7 +19,8 @@ public class RestExceptionHandler {
     @ExceptionHandler({NomenclatureIdNotFound.class,
             UserNotFound.class,
             SaleNotFound.class,
-            UserAlreadyExist.class})
+            UserAlreadyExist.class,
+            NomenclatureIdNotFoundList.class})
     public ResponseEntity<ExceptionResponse> handleEntityNotFoundExceptionException(Exception exception) {
         LOGGER.warn(exception.getMessage());
         ExceptionResponse response = new ExceptionResponse();

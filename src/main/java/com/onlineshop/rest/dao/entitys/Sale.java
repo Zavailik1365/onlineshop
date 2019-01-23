@@ -4,10 +4,9 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 @Entity
-@Table(name = "Sales")
+@Table(name = "sales")
 @Data
 public class Sale {
 

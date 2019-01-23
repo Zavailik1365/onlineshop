@@ -5,8 +5,9 @@ import java.util.List;
 public class NomenclatureIdNotFoundList extends Exception {
 
     public static String newMessage(long id){
+        NomenclatureIdNotFound nomenclatureIdNotFound = new NomenclatureIdNotFound(id);
         return String.format(
-                "Номенклатура с идентификатором %s не найдена.",
+                nomenclatureIdNotFound.getMessageTemplate(),
                 String.valueOf(id));
     }
 

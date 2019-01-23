@@ -11,7 +11,7 @@ public class SaleResponse {
     /**
      * Список приобритенных товаров.
      */
-    private Collection<SaleItem> saleItems;
+    private long id;
 
     /**
      * Наименование пользователя купившиго номенклатуру.
@@ -22,8 +22,8 @@ public class SaleResponse {
 
     }
 
-    public SaleResponse(Collection<SaleItem> saleItem, String userName) {
-        this.saleItems = saleItem;
+    public SaleResponse(long id, String userName) {
+        this.id = id;
         this.userName = userName;
     }
 }

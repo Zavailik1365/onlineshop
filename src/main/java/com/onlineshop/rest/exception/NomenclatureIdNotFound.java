@@ -5,6 +5,10 @@ public class NomenclatureIdNotFound extends Exception {
     private final static String MESSAGE_TEMPLATE =
             "Номенклатура с идентификатором %s не найдена.";
 
+    public static String getMessageTemplate() {
+        return MESSAGE_TEMPLATE;
+    }
+
     private long id;
 
     public NomenclatureIdNotFound(long id) {

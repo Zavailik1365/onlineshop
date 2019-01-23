@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NonNull;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -20,8 +21,12 @@ public class SaleItem {
     private Nomenclature nomenclature;
 
     @NonNull
-    @Size(min = 1)
+    @DecimalMin(value = "1")
     private long amount;
+
+    @NonNull
+    @ManyToOne(fetch = FetchType.EAGER)
+    private Sale sale;
 
     public SaleItem(){
 
@@ -30,6 +35,7 @@ public class SaleItem {
     public SaleItem(@NonNull Nomenclature nomenclature, @NonNull @Size(min = 1) long amount, @NonNull Sale sale) {
         this.nomenclature = nomenclature;
         this.amount = amount;
+        this.sale = sale;
 
     }
 }

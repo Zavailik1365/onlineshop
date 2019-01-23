@@ -4,6 +4,7 @@ import com.onlineshop.rest.dao.entitys.Sale;
 import com.onlineshop.rest.dto.SaleRequest;
 import com.onlineshop.rest.dto.SaleResponse;
 import com.onlineshop.rest.exception.NomenclatureIdNotFound;
+import com.onlineshop.rest.exception.NomenclatureIdNotFoundList;
 import com.onlineshop.rest.exception.SaleNotFound;
 import com.onlineshop.rest.service.SaleService;
 import io.swagger.annotations.*;
@@ -87,7 +88,7 @@ public class SaleController {
     })
     @PostMapping(value = "rest-api/sale")
     public void createNewSale(@RequestBody @Valid SaleRequest saleRequest)
-            throws NomenclatureIdNotFound {
+            throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
         saleService.createNewSales(saleRequest);
     }
 
@@ -106,9 +107,9 @@ public class SaleController {
     public void updateSaleById(
             @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB,
-            @RequestBody @Valid Sale sale)
-            throws SaleNotFound {
-        saleService.updateById(id, saleFromDB, sale);
+            @RequestBody @Valid SaleRequest saleRequest)
+            throws SaleNotFound, NomenclatureIdNotFoundList, NomenclatureIdNotFound {
+        saleService.updateById(id, saleFromDB, saleRequest);
     }
 
     @ApiOperation(
