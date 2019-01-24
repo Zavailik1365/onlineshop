@@ -13,7 +13,12 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-@SpringBootApplication
+@SpringBootApplication(
+        scanBasePackages = {
+                "com.onlineshop.controller",
+                "com.onlineshop.config",
+                "com.onlineshop.service"}
+)
 @PropertySources({
         @PropertySource(value = {
                 "classpath:datasource.properties",

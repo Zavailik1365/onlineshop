@@ -1,8 +1,8 @@
 package com.onlineshop.controller;
 
-import com.onlineshop.rest.dao.entitys.User;
-import com.onlineshop.rest.exception.UserAlreadyExist;
-import com.onlineshop.rest.service.UserDetailService;
+import com.onlineshop.dao.entitys.User;
+import com.onlineshop.exception.UserAlreadyExist;
+import com.onlineshop.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;

@@ -11,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan("com.onlineshop")
+@ComponentScan("com.onlineshop.dao.jpa")
 public class DatabaseConfiguration {
     @Value("${jpa.driver}")
     private String driverClassName;
