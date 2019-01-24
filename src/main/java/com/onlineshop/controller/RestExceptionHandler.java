@@ -20,19 +20,31 @@ public class RestExceptionHandler {
             {
                     NomenclatureIdNotFound.class,
                     SaleNotFound.class,
-                    UserAlreadyExist.class,
                     UserNotFound.class,
-                    NomenclatureIdNotFoundList.class,
+                    NomenclatureIdNotFoundList.class
             })
     @ResponseBody
-    public ResponseEntity<ExceptionResponse> handle(Exception exception) {
+    public ResponseEntity<ExceptionResponse> handleNOT_FOUND(Exception exception) {
         LOGGER.warn(exception.getMessage());
         ExceptionResponse response = new ExceptionResponse();
         response.setErrors(Collections.singletonList(exception.getMessage()));
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
 
-    class ExceptionResponse {
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(
+            {
+                    UserAlreadyExist.class
+            })
+    @ResponseBody
+    public ResponseEntity<ExceptionResponse> handleCONFLICT (UserAlreadyExist exception) {
+        LOGGER.warn(exception.getMessage());
+        ExceptionResponse response = new ExceptionResponse();
+        response.setErrors(Collections.singletonList(exception.getMessage()));
+        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+    }
+
+    public class ExceptionResponse {
         private List<String> errors;
 
         public void setErrors(List<String> errors) {
