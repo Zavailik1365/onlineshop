@@ -54,4 +54,9 @@ public class MainController {
     public String sales() {
         return "sales";
     }
+
+    @GetMapping(value = "nomenclatures")
+    public String nomenclatures() {
+        return "nomenclatures";
+    }
 }

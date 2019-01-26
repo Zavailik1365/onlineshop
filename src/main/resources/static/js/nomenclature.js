@@ -1,48 +1,63 @@
 var nomenclatureAPI = Vue.resource("/rest-api/nomenclatures");
-
-Vue.component('nomenclature-form', {
-    props:['nomenclatures'],
-    data: function() {
-        return {
-            name: '',
-            description: ''
-        }
-    },
-    template: '<div>' +
-        '<input type="text" placeholder="Write name" v-model="name"/>' +
-        '<input type="text" placeholder="Write description" v-model="description"/>' +
-        '<input type="button" value="Save" @click="save"/>' +
-        '</div>',
-    methods: {
-        save: function () {
-            var nomenclature = {
-                name: this.name,
-                description: this.description
-            }
-
-            nomenclatureAPI.save({}, nomenclature).then(data=>{
-                this.nomenclatures.push(data);
-            })
-        }
-    }
-});
+var nomenclatureAdminAPI = Vue.resource("rest-api/admin/nomenclatures/{id}");
 
 Vue.component('nomenclature-row', {
     props:['nomenclature'],
+    data:function() {
+        return {
+            show: false,
+            name: "",
+            description: "",
+    }},
     template:
-        '<div>\n' +
-        '   <b>{{ nomenclature.id }}</b>\n' +
-        '   {{ nomenclature.name }}\n' +
-        '   {{ nomenclature.description }}\n' +
-        '</div>'
+        '<div>' +
+                '{{ nomenclature.name }}' +
+                '<input type="button" value="Редактировать"' +
+                    ' @click = "updateShow" v-if="!show"/>' +
+                '<div>' +
+                    '<input type="text" placeholder="Введите наименование"' +
+                        ' v-model="name" v-if="show"/>' +
+                '</div>' +
+                '<div>' +
+                    '<textarea type="text" placeholder="Введите описание"' +
+                        ' v-model="description" v-if="show"/>' +
+                '</div>' +
+                '<div>' +
+                    '<input type="button" value="Сохранить"' +
+                        ' @click = "save" v-if="show"/>' +
+                        '<input type="button" value="Свернуть"' +
+                        ' @click = "updateShow" v-if="show"/>' +
+                '</div>' +
+        '</div>',
+    methods:{
+
+        updateShow: function () {
+            this.show = !this.show;
+        },
+
+        save: function () {
+
+            request = {
+                "description": this.description,
+                "name": this.name,
+                "id": this.nomenclature.id,
+            }
+
+            nomenclatureAdminAPI.update(
+                {id: this.nomenclature.id}, request).then(
+                    this.nomenclature = request);
+        }
+    },
+    created: function () {
+        this.name = this.nomenclature.name;
+        this.description = this.nomenclature.description;
+    }
 });
 
 Vue.component('nomenclature-list', {
     props:['nomenclatures'],
-    // language=HTML
     template:
         '<div>' +
-            '<nomenclature-form :nomenclatures="nomenclatures"/>' +
             '<nomenclature-row v-for="nomenclature in nomenclatures"' +
                 ' :key="nomenclature.id"' +
                 ' :nomenclature="nomenclature" />' +
@@ -51,16 +66,15 @@ Vue.component('nomenclature-list', {
         nomenclatureAPI.get().then(result =>
             result.json().then(
                 data => data.forEach(
-                    nomenclature => this.nomenclatures.push(nomenclature)
-                )
-            )
-        )
+                    nomenclature => this.nomenclatures.push(nomenclature))))
     }
 });
 
 var app = new Vue({
     el: '#app',
-    template: '<nomenclature-list :nomenclatures="nomenclatures"/>',
+    template: '<table>' +
+                '<nomenclature-list :nomenclatures="nomenclatures"/>' +
+               '</table>',
     data: {
         nomenclatures: []
     }

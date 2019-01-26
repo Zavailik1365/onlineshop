@@ -32,7 +32,7 @@ public class OnlineShopApplication {
     public Docket api(){
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.onlineshop.rest"))
+                .apis(RequestHandlerSelectors.basePackage("com.onlineshop"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo());
