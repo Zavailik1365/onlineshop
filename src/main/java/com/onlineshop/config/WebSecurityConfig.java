@@ -18,7 +18,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final AuthenticationEntryPoint authEntryPoint;
 
     @Autowired
-    public WebSecurityConfig(UserDetailService userService, PasswordEncoder passwordEncoder, AuthenticationEntryPoint authEntryPoint) {
+    public WebSecurityConfig(
+            UserDetailService userService,
+            PasswordEncoder passwordEncoder,
+            AuthenticationEntryPoint authEntryPoint) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.authEntryPoint = authEntryPoint;

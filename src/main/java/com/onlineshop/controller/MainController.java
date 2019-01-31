@@ -1,53 +1,40 @@
 package com.onlineshop.controller;
 
+import com.onlineshop.dao.entitys.Role;
 import com.onlineshop.dao.entitys.User;
-import com.onlineshop.exception.UserAlreadyExist;
-import com.onlineshop.service.UserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
+import java.util.*;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
 
-    private final UserDetailService userService;
-
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user){
-
-        HashMap<Object, Object> data = new HashMap<>();
-        if (user == null) {
-            data.put("profile", null);
-        }else {
-            data.put("profile", user.getRoles());
-        }
-        model.addAttribute("frontendData", data);
-
+        newFrontEndData(model, user, "");
         return "index";
     }
 
-    @Autowired
-    public MainController(UserDetailService userService) {
-        this.userService = userService;
+    @GetMapping(value = "user")
+    public String user(Model model, @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "");
+        return "user";
     }
 
-    @GetMapping(value = "registration")
-    public String registration() {
-        return "registration";
+    @GetMapping(value = "admin/user/{id}")
+    public String user(@PathVariable long id,  Model model, @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, String.valueOf(id));
+        return "user";
     }
 
-    @PostMapping(value = "registration")
-    public String addNewUser(User user) throws UserAlreadyExist {
-
-        userService.addUser(user); //TODO переделать на REST
-        return "redirect:login";
+    @GetMapping(value = "admin/users")
+    public String users(Model model, @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "");
+        return "users";
     }
 
     @GetMapping(value = "sales")
@@ -58,5 +45,25 @@ public class MainController {
     @GetMapping(value = "nomenclatures")
     public String nomenclatures() {
         return "nomenclatures";
+    }
+
+    private void newFrontEndData(Model model, User user, String id){
+
+        HashMap<String, Object> profileData = new HashMap<>();
+
+        if (user == null) {
+            profileData.put("isAdmin",  false);
+            profileData.put("name",     "Unknow");
+            profileData.put("id",       id);
+        }else {
+            profileData.put("isAdmin", user.getRoles().contains(Role.ROLE_ADMIN));
+            profileData.put("name",    user.getUsername());
+            profileData.put("id",      id.equals("") ? user.getId(): id);
+        }
+
+        HashMap<Object, Object> frontendData = new HashMap<>();
+        frontendData.put("profile", profileData);
+
+        model.addAttribute("frontendData", frontendData);
     }
 }

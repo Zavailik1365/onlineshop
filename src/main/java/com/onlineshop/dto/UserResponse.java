@@ -13,6 +13,12 @@ public class UserResponse {
     private String name;
 
     @NonNull
+    private String fullname;
+
+    @NonNull
+    private String email;
+
+    @NonNull
     private long id;
 
     @NonNull

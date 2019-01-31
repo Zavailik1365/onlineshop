@@ -40,7 +40,7 @@ public class User implements UserDetails {
 
     private boolean active;
 
-    User(){
+    public User(){
 
     }
 
@@ -48,6 +48,10 @@ public class User implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    /**
+     * User details.
+     */
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
