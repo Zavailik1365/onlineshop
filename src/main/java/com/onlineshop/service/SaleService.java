@@ -3,9 +3,11 @@ package com.onlineshop.service;
 import com.onlineshop.dao.entitys.Nomenclature;
 import com.onlineshop.dao.entitys.Sale;
 import com.onlineshop.dao.entitys.SaleItem;
+import com.onlineshop.dao.entitys.User;
 import com.onlineshop.dao.jpa.SaleDao;
 import com.onlineshop.dao.jpa.SaleItemDao;
 import com.onlineshop.dto.ItemRequest;
+import com.onlineshop.dto.ItemResponse;
 import com.onlineshop.dto.SaleRequest;
 import com.onlineshop.dto.SaleResponse;
 import com.onlineshop.exception.NomenclatureIdNotFound;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -42,29 +45,17 @@ public class SaleService {
      * Обработка запросов клиентов
      */
 
-    public List<SaleResponse> findAll() {
+    public  List<SaleResponse>  findByUser(User user) {
 
-        List saleList = saleDao.findAll();
-
-        return createSaleResponseList(saleList);
+        List<Sale> sales = saleDao.findByUser(user);
+        return  newSaleResponseList(sales);
     }
 
-    public SaleResponse findById(long id) throws SaleNotFound {
+    public  List<SaleResponse>  findAll() {
 
-        Sale sale = saleDao.findById(id);
+        List<Sale> sales = saleDao.findAll();
+        return  newSaleResponseList(sales);
 
-        if (sale == null) {
-            throw new SaleNotFound(id);
-        }
-        return createSaleResponse(sale);
-    }
-
-    public List<SaleResponse> findByUser() {
-
-        List saleList = saleDao.findByUser(
-                userDetailService.getAuthenticationUser());
-
-        return createSaleResponseList(saleList);
     }
 
     public void createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
@@ -166,20 +157,16 @@ public class SaleService {
         return saleItemList;
     }
 
-    private List<SaleResponse> createSaleResponseList(List saleList) {
+    private List<SaleResponse> newSaleResponseList(List<Sale> sales){
 
-        List<SaleResponse> saleResponseList = new ArrayList<>();
-
-        for (Object item : saleList) {
-            saleResponseList.add(createSaleResponse((Sale) item));
+        List<SaleResponse> saleResponse = new ArrayList<>();
+        for (Object sale: sales){
+            Sale saleEntity = (Sale) sale;
+            saleResponse.add(new SaleResponse(
+                    saleEntity.getId(),
+                    saleEntity.getUser().getUsername()));
         }
 
-        return saleResponseList;
-    }
-
-    private SaleResponse createSaleResponse(Sale sale) {
-        return new SaleResponse(
-                sale.getId(),
-                sale.getUser().getUsername());
+        return saleResponse;
     }
 }

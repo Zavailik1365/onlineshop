@@ -1,96 +1,149 @@
-var nomenclatureAPI = Vue.resource("/rest-api/nomenclatures");
-var saleAPI = Vue.resource("/rest-api/sale");
-var items = [];
+var salesAdminAPI = Vue.resource("/rest-api/admin/sales");
+var saleAdminDeleteAPI = Vue.resource("/rest-api/admin/sale/{id}");
+var salesAPI = Vue.resource("/rest-api/sales");
 
-Vue.component('nomenclature-row', {
-    props:['nomenclature'],
-    data:function() {
+Vue.component('sales-list', {
+    props:['sales'],
+    data: function(){
         return {
-        nomenclature_id: "",
-        amount: 0
-        }
+            name: frontendData.profile.name,
+            url: "",
+            isAdmin: false,
+            error: "",
+            showErrors: false,
+         }
     },
     template:
-        '<tr>' +
-           '<td>   {{ nomenclature.name }} </td>\n' +
-           '<td>   {{ nomenclature.description }} </td>\n' +
-           '<td>   <input' +
-                ' type="number" v-model = "amount" value = 0' +
-                ' placeholder="Количество товара" @input="save"' +
-                ' id="amount_input"/> </td>' +
-        '</tr>',
-    methods: {
-        save: function () {
+        '<v-app>' +
+            '<v-toolbar app dark color="primary">' +
+                '<v-toolbar-title class="white--text">Onlineshop</v-toolbar-title>' +
+                '<v-spacer></v-spacer>' +
+                '<v-btn flat href = "/user">\n' +
+                    '{{ name }}' +
+                '</v-btn>' +
+                '<v-btn icon href="/logout">' +
+                    '<v-icon>exit_to_app</v-icon>' +
+                '</v-btn>' +
+            '</v-toolbar>' +
+            ' <v-content>' +
+                '<v-container>' +
+                    '<v-layout align-center justify-center row fill-height>' +
+                        '<v-flex lg9>' +
+                            '<v-input' +
+                                ' prepend-icon="error"' +
+                                ' v-if="showErrors"' +
+                                ' v-model="error">' +
+                                '{{error}}' +
+                            '</v-input>' +
+                            '<v-btn' +
+                                ' color="success"' +
+                                ' v-if="!showErrors"' +
+                                ' href = "/sale">' +
+                                '<v-icon dark>add</v-icon>' +
+                                'Добавить' +
+                            '</v-btn>' +
+                            '<v-list two-line>' +
+                                ' <v-list-tile' +
+                                ' v-for="sale in sales"' +
+                                ' :key="sale.id"' +
+                                ' avatar>' +
+                                ' <v-list-tile-content>' +
+                                    ' <v-list-tile-title v-text="sale.title"></v-list-tile-title>' +
+                                    '<v-list-tile-sub-title v-html="sale.username"></v-list-tile-sub-title>' +
+                                ' </v-list-tile-content>' +
+                                '<v-list-tile-action> ' +
+                                    '<div>' +
+                                        '<v-btn icon ripple :href="url + sale.id">' +
+                                            '<v-icon color="grey lighten-1">edit</v-icon>' +
+                                         '</v-btn>' +
+                                        '<v-btn icon ripple @click="deleteSale(sale)" v-if="isAdmin">' +
+                                            '<v-icon color="grey lighten-1">delete</v-icon>' +
+                                        '</v-btn>' +
+                                    '</div>' +
+                               '</v-list-tile-action>' +
+                                ' </v-list-tile>' +
+                            ' </v-list>' +
+                        ' </v-flex>' +
+                    '</v-layout>' +
+                '</v-container>' +
+            '</v-content>' +
+        '</v-app>',
+    methods:{
+        deleteSale: function (sale) {
 
-            var wasChange = false;
-
-            for (item in items){
-                if (items[item].nomenclature_id == this.nomenclature.id) {
-                    items[item].amount = Number(this.amount);
-                    wasChange = true;
-                }
+            if (!this.isAdmin) {
+                this.error = "Ошибка удаления продажи. Обратитесь к администратору";
+                this.showErrors = true;
             }
-            if (!wasChange) {
-                var item = {
-                    "nomenclature_id": this.nomenclature.id,
-                    "amount": Number(this.amount)
-                };
-                items.push(item);
-            }
-    }}
-});
 
-Vue.component('nomenclature-list', {
-    props:['nomenclatures'],
-    template:
-        '<div>' +
-            '<nomenclature-row v-for="nomenclature in nomenclatures"' +
-                ' :key="nomenclature.id"' +
-                ' :nomenclature="nomenclature" />' +
-        '</div>',
+            this.showErrors = false;
+
+            saleAdminDeleteAPI.delete({id: sale.id}).then(response =>{
+                for (item in this.sales){
+                    if (this.sales[item] == sale){
+                        this.sales.splice(item, 1);
+                        break;
+                        }
+                    }
+                },
+                result =>{
+                    this.error = "Ошибка удаления продажи. Обратитесь к администратору";
+                    this.showErrors = true;
+                });
+
+        }
+    },
     created: function() {
-        nomenclatureAPI.get().then(result =>
-            result.json().then(
-                data => data.forEach(
-                    nomenclature => this.nomenclatures.push(nomenclature)
-                )
-            )
-        )
+
+        this.url = "sale/";
+        this.isAdmin = frontendData.profile.isAdmin;
+
+        if (this.isAdmin) {
+            salesAdminAPI.get().then(result =>
+                    result.json().then(
+                        data => data.forEach(
+                            sale => {
+                                representation = {
+                                    id:sale.id,
+                                    username:sale.userName,
+                                    title:"Продажа № " + sale.id,
+                                };
+                                this.sales.push(representation);
+                            })),
+                result =>{
+                    this.error = "Ошибка определения списка продаж. Обратитесь к администратору";
+                    this.showErrors = true;
+                });
+        } else {
+            salesAPI.get().then(
+                result =>
+                    result.json().then(
+                        data => data.forEach(
+                            sale => {
+                                representation = {
+                                    id:sale.id,
+                                    username:sale.userName,
+                                    title:"Продажа № " + sale.id,
+                                };
+                                this.sales.push(representation);
+                            })),
+                result =>{
+                    this.error = "Ошибка определения списка продаж. Обратитесь к администратору";
+                    this.showErrors = true;
+                });
+        }
+
     }
 });
 
 var app = new Vue({
     el: '#app',
-    data: {
-        nomenclatures: []
-    },
     template: '<div>' +
-            '<table>' +
-                '<nomenclature-list :nomenclatures="nomenclatures"/>' +
-            '</table>' +
-            '<input type="button" value="Купить" @click = "save" id="Save">' +
+            '<sales-list :sales="sales"/>' +
         '</div>',
-    methods: {
-        save: function () {
-            request = {
-                "items": items
-            }
-
-            saleAPI.save(request).then(
-                function (response) {
-                    items = [];
-                    inputList = document.getElementsByTagName('input')
-                    for (item in inputList){
-                        if (inputList[item].id == "amount_input"){
-                            inputList[item].value = 0;
-                        }
-                    }
-                    },
-                function (error) {
-                    alert("Не удалось сохранить продажу обратитель к администратору.");
-                }
-                );
+    data: function () {
+        return {
+            sales: []
         }
     }
-
 });

@@ -19,14 +19,14 @@ public class Nomenclature {
      * Наименование номенклатуры.
      */
     @NonNull
-    @Size(min = 1)
+    @Size(min = 2)
     private String name;
 
     /**
      * Описание номенклатуты для пользователя.
      */
     @NonNull
-    @Size(min = 1)
+    @Size(min = 2)
     private String description;
 
     public Nomenclature() {

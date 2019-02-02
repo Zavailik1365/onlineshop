@@ -15,39 +15,71 @@ public class MainController {
 
     @GetMapping
     public String main(Model model, @AuthenticationPrincipal User user){
-        newFrontEndData(model, user, "");
+        newFrontEndData(model, user, "", "");
         return "index";
     }
 
     @GetMapping(value = "user")
     public String user(Model model, @AuthenticationPrincipal User user) {
-        newFrontEndData(model, user, "");
+        newFrontEndData(model, user, "", "");
         return "user";
     }
 
     @GetMapping(value = "admin/user/{id}")
-    public String user(@PathVariable long id,  Model model, @AuthenticationPrincipal User user) {
-        newFrontEndData(model, user, String.valueOf(id));
+    public String user(
+            @PathVariable long id,
+            Model model,
+            @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, String.valueOf(id), "");
         return "user";
     }
 
     @GetMapping(value = "admin/users")
     public String users(Model model, @AuthenticationPrincipal User user) {
-        newFrontEndData(model, user, "");
+        newFrontEndData(model, user, "", "");
         return "users";
     }
 
     @GetMapping(value = "sales")
-    public String sales() {
+    public String sales(Model model, @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "", "");
         return "sales";
     }
 
-    @GetMapping(value = "nomenclatures")
-    public String nomenclatures() {
+    @GetMapping(value = "sale")
+    public String sale(Model model, @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "", "");
+        return "sale";
+    }
+
+    @GetMapping(value = "admin/nomenclatures")
+    public String nomenclatures(Model model, @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "", "");
         return "nomenclatures";
     }
 
-    private void newFrontEndData(Model model, User user, String id){
+    @GetMapping(value = "admin/nomenclature/{id}")
+    public String nomenclature(
+            @PathVariable String id,
+            Model model,
+            @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "", id);
+        return "nomenclature";
+    }
+
+    @GetMapping(value = "admin/nomenclature")
+    public String addNomenclature(
+            Model model,
+            @AuthenticationPrincipal User user) {
+        newFrontEndData(model, user, "", "");
+        return "nomenclature";
+    }
+
+    private void newFrontEndData(
+            Model model,
+            User user,
+            String id,
+            String nomenclatureId){
 
         HashMap<String, Object> profileData = new HashMap<>();
 
@@ -60,6 +92,8 @@ public class MainController {
             profileData.put("name",    user.getUsername());
             profileData.put("id",      id.equals("") ? user.getId(): id);
         }
+
+        profileData.put("nomenclatureId", nomenclatureId);
 
         HashMap<Object, Object> frontendData = new HashMap<>();
         frontendData.put("profile", profileData);

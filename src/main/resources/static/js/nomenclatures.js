@@ -1,7 +1,7 @@
-var userAPI = Vue.resource("/rest-api/admin/users");
+var nomenclatureAPI = Vue.resource("/rest-api/nomenclatures");
 
-Vue.component('user-list', {
-    props:['users'],
+Vue.component('nomenclature-list', {
+    props:['nomenclatures'],
     data: function(){
         return {
         name: frontendData.profile.name,
@@ -30,19 +30,26 @@ Vue.component('user-list', {
                                 ' prepend-icon="error"' +
                                 ' v-if="showErrors"' +
                                 ' v-model="error">' +
-                                '{{error}}' +
+                                    '{{error}}' +
                             '</v-input>' +
                             '<v-list two-line>' +
+                            '<v-btn' +
+                                ' color="success"' +
+                                ' v-if="!showErrors"' +
+                                ' href = "/admin/nomenclature/">' +
+                                '<v-icon dark>add</v-icon>' +
+                                'Добавить' +
+                            '</v-btn>' +
                                 ' <v-list-tile' +
-                                    ' v-for="user in users"' +
-                                    ' :key="user.id"' +
+                                    ' v-for="nomenclature in nomenclatures"' +
+                                    ' :key="nomenclature.id"' +
                                     ' avatar>' +
                                     ' <v-list-tile-content>' +
-                                        ' <v-list-tile-title v-text="user.name"></v-list-tile-title>' +
-                                        '<v-list-tile-sub-title v-html="user.fullname"></v-list-tile-sub-title>'+
+                                        '<v-list-tile-title v-text="nomenclature.name"></v-list-tile-title>' +
+                                        '<v-list-tile-sub-title v-html="nomenclature.description"></v-list-tile-sub-title>'+
                                     ' </v-list-tile-content>' +
                                     '<v-list-tile-action> ' +
-                                         '<v-btn icon ripple :href="url + user.id">' +
+                                         '<v-btn icon ripple :href="url + nomenclature.id">' +
                                             '<v-icon color="grey lighten-1">edit</v-icon>' +
                                          '</v-btn>' +
                                     '</v-list-tile-action>' +
@@ -54,28 +61,28 @@ Vue.component('user-list', {
            '</v-content>' +
         '</v-app>',
       created: function() {
-        userAPI.get().then(result =>
+          nomenclatureAPI.get().then(result =>
             result.json().then(
                 data => data.forEach(
-                    user => {
-                        this.users.push(user);
+                    nomenclature => {
+                        this.nomenclatures.push(nomenclature)
                     })),
-            result =>{
-                this.error = "Ошибка удаления продажи. Обратитесь к администратору";
-                this.showErrors = true;
-            })
-          this.url = "user/";
+              result =>{
+                  this.error = "Ошибка определения списка номенклатуры. Обратитесь к администратору";
+                  this.showErrors = true;
+              })
+        this.url = "nomenclature/";
     }
 });
 
 var app = new Vue({
     el: '#app',
     template: '<div>' +
-                '<user-list :users="users"/>' +
+                '<nomenclature-list :nomenclatures="nomenclatures"/>' +
                '</div>',
     data: function () {
         return {
-        users: []
+            nomenclatures: []
         }
     }
 });

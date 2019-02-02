@@ -38,7 +38,7 @@ public class UserController {
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping(value = "rest-api/admin/user")
+    @GetMapping(value = "rest-api/admin/users")
     public List<UserResponse> usersList() {
         return userDetailService.findAll();
     }

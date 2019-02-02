@@ -1,6 +1,7 @@
 package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.Sale;
+import com.onlineshop.dao.entitys.User;
 import com.onlineshop.dto.SaleRequest;
 import com.onlineshop.dto.SaleResponse;
 import com.onlineshop.exception.NomenclatureIdNotFound;
@@ -9,6 +10,7 @@ import com.onlineshop.exception.SaleNotFound;
 import com.onlineshop.service.SaleService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -52,27 +54,10 @@ public class SaleController {
             @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
-    @GetMapping(value = "rest-api/sale")
-    public List<SaleResponse> listByUser() {
-        return saleService.findByUser();
-    }
-
-    @ApiOperation(
-            value = "Создание новой продажи номенклатуры",
-            notes = "Передача информации о новой продажи.."
-    )
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "операция прошла успешно"),
-            @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 404, message = "продажа по идентификатору не найдена"),
-            @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
-            @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
-    })
-    @GetMapping(value = "rest-api/admin/sale/{id}")
-    public SaleResponse getSaleById(
-            @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id)
-            throws SaleNotFound {
-        return saleService.findById(id);
+    @GetMapping(value = "rest-api/sales")
+    public List<SaleResponse> listByUser(
+            @AuthenticationPrincipal User user) {
+        return saleService.findByUser(user);
     }
 
     @ApiOperation(

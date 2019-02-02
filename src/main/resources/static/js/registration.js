@@ -4,6 +4,8 @@ var app = new Vue({
     el: '#app',
     data: function() {
         return {
+            error: "",
+            showErrors: false,
             valid: true,
             username: "",
             fullname: "",
@@ -24,8 +26,14 @@ var app = new Vue({
                     '<v-toolbar-title class="white--text">Onlineshop</v-toolbar-title>' +
                 '</v-toolbar>' +
                 '<v-content>' +
-                    '<v-layout align-center justify-center column fill-height>' +
+                      '<v-layout align-center justify-center column fill-height>' +
                         '<v-flex lg3>' +
+                            '<v-input' +
+                                ' prepend-icon="error"' +
+                                ' v-if="showErrors"' +
+                                ' v-model="error">' +
+                                '{{error}}' +
+                            '</v-input>' +
                             '<v-form ref="form" th:action="@{/registration}" method="post">' +
                                 '<v-text-field' +
                                     ' required label="Логин"' +
@@ -77,9 +85,16 @@ var app = new Vue({
             if (!this.$refs.form.validate()) {
                 return;
             }
-
             this.$refs.form.$el.submit();
 
         }
+    },
+
+    created: function () {
+        if (error != null) {
+            this.error = error;
+            this.showErrors = (error.length != 0);
+        }
     }
+
 });

@@ -8,6 +8,7 @@ import com.onlineshop.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 @Controller
 @RequestMapping("/registration")
@@ -42,17 +45,30 @@ public class RegistrationController {
     @PostMapping
     public String registration(
                 @RequestParam("g-recaptcha-response") String captchaResponse,
-                @Valid UserRequest userRequest)
-            throws UserAlreadyExist, CaptchaIsNotSuccess {
+                @Valid UserRequest userRequest,
+                Model model) {
         String url = String.format(CAPCHA_URL, secret, captchaResponse);
         CaptchaResponse captchaResponseDto = restTemplate.postForObject(
                     url,
                     Collections.emptyList(),
                     CaptchaResponse.class);
+        String errorRegistration = "";
         if (!captchaResponseDto.isSuccess()) {
-            throw new CaptchaIsNotSuccess();
+            errorRegistration = "Не верно введена каптча";
+        }else {
+            try {
+                userService.addUser(userRequest);
+            } catch (UserAlreadyExist excp) {
+                errorRegistration = "Пользователь уже существует";
+            }
         }
-        userService.addUser(userRequest);
-        return "redirect:login";
+
+        model.addAttribute("error",errorRegistration);
+        if (errorRegistration.isEmpty()) {
+            return "redirect:login";
+        }else{
+            return "registration";
+        }
+
     }
 }

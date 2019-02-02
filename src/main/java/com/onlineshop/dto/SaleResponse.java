@@ -1,6 +1,9 @@
 package com.onlineshop.dto;
 
+import com.onlineshop.dao.entitys.SaleItem;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class SaleResponse {
@@ -21,6 +24,6 @@ public class SaleResponse {
 
     public SaleResponse(long id, String userName) {
         this.id = id;
-        this.userName = userName;
+        this.userName = String.format("Создал продажу пользователь %s", userName);
     }
 }

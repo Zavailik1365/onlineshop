@@ -1,4 +1,4 @@
-var userAPI = Vue.resource("/rest-api/user");
+var userAPI = Vue.resource("/rest-api/user1");
 var userAdminAPI = Vue.resource("/rest-api/admin/user/{id}");
 var rolesAdminAPI = Vue.resource("/rest-api/admin/roles");
 
@@ -7,6 +7,8 @@ Vue.component('user-detals', {
             return {
                 name: "",
                 valid: true,
+                error: "",
+                showErrors: false,
                 id: "",
                 username: "",
                 fullname: "",
@@ -39,6 +41,12 @@ Vue.component('user-detals', {
                     '<v-content>' +
                         '<v-layout align-center justify-center row fill-height>' +
                             '<v-flex lg3>' +
+                            '<v-input' +
+                                ' prepend-icon="error"' +
+                                ' v-if="showErrors"' +
+                                ' v-model="error">' +
+                                '{{error}}' +
+                            '</v-input>' +
                             ' <v-form' +
                                 ' ref="form"' +
                                 ' v-model="valid"' +
@@ -48,28 +56,32 @@ Vue.component('user-detals', {
                                         ' placeholder="SidorovA"' +
                                         ' type="text"' +
                                         ' v-model="username"' +
+                                        ' v-if="!showErrors"' +
                                         ' :rules="[rules.required, rules.min2]"/>' +
                                     '<v-text-field' +
                                         ' required label="Пароль"' +
                                         ' placeholder="1406558"' +
                                         ' type="password"' +
-                                        ' v-model="password"/>' +
+                                        ' v-model="password"' +
+                                        ' v-if="!showErrors"/>' +
                                     '<v-text-field required label="Полное имя"' +
                                         ' placeholder="Sidorov Ivan"' +
                                         ' type="text"' +
                                         ' v-model="fullname"' +
+                                        ' v-if="!showErrors"' +
                                         ' :rules="[rules.required]"/>' +
                                     '<v-text-field required label="Email"' +
                                         ' placeholder="Email"' +
                                         ' type="text" ' +
                                         ' v-model="email"' +
+                                        ' v-if="!showErrors"' +
                                         ' :rules="[rules.required, rules.emailMatch]"/>'+
                                     '<v-select' +
                                         ' :items="rolesitems"' +
                                         ' v-model="roles"\n' +
                                         '  label="Роли"\n' +
                                         ' multiple' +
-                                        ' v-if = "isAdmin">' +
+                                        ' v-if = "isAdmin&&!showErrors">' +
                                         '<template' +
                                             ' slot="selection"' +
                                             ' slot-scope="{ item, index }">' +
@@ -86,9 +98,10 @@ Vue.component('user-detals', {
                                     '<v-checkbox' +
                                         ' required label="Активный"' +
                                         ' v-model="active"' +
-                                       ' v-if = "isAdmin"/>' +
-                                    '<v-btn color="success" @click = "save">Сохранить</v-btn>' +
-                                    '<v-btn @click = "clear">Очистить</v-btn>' +
+                                       ' v-if = "isAdmin&&!showErrors""/>' +
+                                    '<v-btn color="success" @click = "save" v-if="!showErrors">Сохранить</v-btn>' +
+                                    '<v-btn @click = "clear" v-if="!showErrors">Очистить</v-btn>' +
+                                    '<v-btn href="/admin/users" v-if="!showErrors">К списку</v-btn>' +
                                 '</v-form>' +
                             '</v-flex>' +
                         '</v-layout>' +
@@ -109,7 +122,7 @@ Vue.component('user-detals', {
                 if (!this.$refs.form.validate()) {
                     return;
                 }
-
+                this.showErrors = false;
                 if (this.isAdmin) {
                     var request = {
                         username: this.username,
@@ -120,8 +133,14 @@ Vue.component('user-detals', {
                         roles: this.roles
                     }
                     userAdminAPI.update({id: this.id}, request).then(
-                        alert("Данные пользователя сохранены.")
-                    )
+                        response =>
+                        {
+                            alert("Данные пользователя сохранены.")
+                        },
+                        result =>{
+                            this.error = "Ошибка сохраненения данных пользователя. Обратитесь к администратору";
+                            this.showErrors = true;
+                        });
                 }else{
                     var request = {
                         username: this.username,
@@ -131,8 +150,14 @@ Vue.component('user-detals', {
                     }
 
                     userAPI.update(request).then(
-                        alert("Данные пользователя сохранены.")
-                    )
+                        response =>
+                        {
+                            alert("Данные пользователя сохранены.")
+                        },
+                        result =>{
+                            this.error = "Ошибка сохраненения данных пользователя. Обратитесь к администратору";
+                            this.showErrors = true;
+                        })
                 }
             },
 
@@ -144,26 +169,41 @@ Vue.component('user-detals', {
             this.name = frontendData.profile.name;
 
             if (this.isAdmin) {
-                userAdminAPI.get({id: this.id}).then( response => {
-                    this.username =  response.body.name;
-                    this.fullname =  response.body.fullname;
-                    this.email =  response.body.email;
-                    this.active =  response.body.active;
-                    this.roles =  response.body.roles;
-                })
+                userAdminAPI.get({id: this.id}).then(
+                    response => {
+                        this.username =  response.body.name;
+                        this.fullname =  response.body.fullname;
+                        this.email =  response.body.email;
+                        this.active =  response.body.active;
+                        this.roles =  response.body.roles;
+                    },
+                    result =>{
+                        this.error = "Ошибка получения данных пользователя. Обратитесь к администратору";
+                        this.showErrors = true;
+                    });
 
-                rolesAdminAPI.get().then( response => {
-                    this.rolesitems =  response.body
-                })
+                rolesAdminAPI.get().then(
+                    response => {
+                        this.rolesitems =  response.body
+                    },
+                    result =>{
+                        this.error = "Ошибка получения данных о ролях. Обратитесь к администратору";
+                        this.showErrors = true;
+                    });
 
             } else {
-                userAPI.get().then( response => {
-                   this.username =  response.body.name;
-                   this.fullname =  response.body.fullname;
-                   this.email =  response.body.email;
-                   this.active =  response.body.active;
-                   this.roles =  response.body.roles;
-                })
+                userAPI.get().then(
+                    response => {
+                       this.username =  response.body.name;
+                       this.fullname =  response.body.fullname;
+                       this.email =  response.body.email;
+                       this.active =  response.body.active;
+                       this.roles =  response.body.roles;
+                    },
+                    result =>{
+                        this.error = "Ошибка получения данных пользователя. Обратитесь к администратору";
+                        this.showErrors = true;
+                    });
             }
         }
     }

@@ -8,5 +8,4 @@ import java.util.List;
 
 public interface SaleDao extends JpaRepository<Sale, Long> {
     List<Sale> findByUser(User user);
-    Sale findById(long id);
 }
