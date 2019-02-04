@@ -10,6 +10,9 @@ import java.util.Set;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CaptchaResponse {
 
+    /**
+     * Переименование свойства error-codes -> errorCodes
+     */
     @JsonAlias("error-codes")
     private Set<String> errorCodes;
     private boolean success;

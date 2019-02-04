@@ -114,8 +114,8 @@ public class UserController {
     }
 
     @ApiOperation(
-            value = "Обновление существующего пользователя",
-            notes = "Обновление пользователя по идентификатору."
+            value = "Спиок всех ролей сервиса",
+            notes = "Получение списока всех ролей сервиса."
     )
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),

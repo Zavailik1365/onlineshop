@@ -13,7 +13,12 @@ Vue.component('user-list', {
     template:
         '<v-app>' +
             '<v-toolbar app dark color="primary">' +
-                '<v-toolbar-title class="white--text">Onlineshop</v-toolbar-title>' +
+                '<v-btn flat href="/">' +
+                    '<v-toolbar-title class="white--text">Online shop</v-toolbar-title>' +
+                '</v-btn>' +
+                '<v-btn flat href="/admin/nomenclatures">Номенклатура</v-btn>' +
+                '<v-btn flat href="/admin/users">Пользователи</v-btn>' +
+                '<v-btn flat href="/admin/sales">Продажи</v-btn>' +
                 '<v-spacer></v-spacer>' +
                 '<v-btn flat href = "/user">\n' +
                     '{{ name }}' +

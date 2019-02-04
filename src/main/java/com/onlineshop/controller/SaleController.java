@@ -1,7 +1,6 @@
 package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.Sale;
-import com.onlineshop.dao.entitys.User;
 import com.onlineshop.dto.ItemResponse;
 import com.onlineshop.dto.SaleRequest;
 import com.onlineshop.dto.SaleResponse;
@@ -11,7 +10,6 @@ import com.onlineshop.exception.SaleNotFound;
 import com.onlineshop.service.SaleService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -46,23 +44,7 @@ public class SaleController {
     }
 
     @ApiOperation(
-            value = "Получение списка всех покупок номенклатуры для текущего пользователя",
-            notes = "Получение списка всех покупок пользователя с сервера."
-    )
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "операция прошла успешно"),
-            @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
-            @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
-    })
-    @GetMapping(value = "rest-api/sales")
-    public List<SaleResponse> listByUser(
-            @AuthenticationPrincipal User user) {
-        return saleService.findByUser(user);
-    }
-
-    @ApiOperation(
-            value = "Получение продажи текущего пользователя по иденификатору",
+            value = "Получение продажи по иденификатору",
             notes = "Получение продажи с сервера."
     )
     @ApiResponses({
@@ -80,7 +62,7 @@ public class SaleController {
 
     @ApiOperation(
             value = "Создание новой продажи номенклатуры",
-            notes = "Передача информации о новой продажи.."
+            notes = "Передача информации о новой продажи."
     )
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),

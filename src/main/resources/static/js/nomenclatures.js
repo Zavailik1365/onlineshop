@@ -13,7 +13,12 @@ Vue.component('nomenclature-list', {
     template:
         '<v-app>' +
             '<v-toolbar app dark color="primary">' +
-                '<v-toolbar-title class="white--text">Onlineshop</v-toolbar-title>' +
+                '<v-btn flat href="/">' +
+                    '<v-toolbar-title class="white--text">Online shop</v-toolbar-title>' +
+                '</v-btn>' +
+                '<v-btn flat href="/admin/nomenclatures">Номенклатура</v-btn>' +
+                '<v-btn flat href="/admin/users">Пользователи</v-btn>' +
+                '<v-btn flat href="/admin/sales">Продажи</v-btn>' +
                 '<v-spacer></v-spacer>' +
                 '<v-btn flat href = "/user">\n' +
                     '{{ name }}' +
@@ -34,10 +39,9 @@ Vue.component('nomenclature-list', {
                             '</v-input>' +
                             '<v-list two-line>' +
                             '<v-btn' +
-                                ' color="success"' +
+                                ' color="primary"' +
                                 ' v-if="!showErrors"' +
                                 ' href = "/admin/nomenclature/">' +
-                                '<v-icon dark>add</v-icon>' +
                                 'Добавить' +
                             '</v-btn>' +
                                 ' <v-list-tile' +

@@ -142,10 +142,7 @@ public class UserDetailService implements UserDetailsService {
     public List<Role> getAllRoles() {
 
         List<Role> roles = new ArrayList<>();
-
-        for (Role role: Role.values()) {
-            roles.add(role);
-        }
+        Collections.addAll(roles, Role.values());
 
         return roles;
     }

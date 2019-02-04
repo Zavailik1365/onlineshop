@@ -11,6 +11,9 @@ import javax.validation.constraints.Size;
 @Data
 public class Nomenclature {
 
+    /**
+     * Идентификатор номенклатуры.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;

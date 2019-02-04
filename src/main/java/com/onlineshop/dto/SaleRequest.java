@@ -9,6 +9,9 @@ import java.util.List;
 @Data
 public class SaleRequest {
 
+    /**
+     * Список товаров
+     */
     @NotNull(message = "items не может быть NULL")
     @Size(min = 1, message = "items не может быть пустым")
     private List<ItemRequest> items;

@@ -17,37 +17,59 @@ import java.util.Set;
 @Data
 @Table(name = "usr")
 public class User implements UserDetails {
+
+    /**
+     * Идентификатор пользователя
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * Логин пользователя
+     */
     @NonNull
     @Size(min = 1)
     private String username;
 
+    /**
+     * Полное имя пользователя
+     */
     @NonNull
     @Size(min = 1)
     private String fullname;
 
+    /**
+     * Пароль пользователя
+     */
     @NonNull
     @Size(min = 1)
     private String password;
 
+    /**
+     * Email пользователя
+     */
     @NonNull
     @Size(min = 1)
     @Pattern(regexp = "([A-z0-9_.-]{1,})@([A-z0-9_.-]{1,}).([A-z]{2,8})")
     private String email;
 
+    /**
+     * Признак активности
+     */
     private boolean active;
 
-    public User(){
-
-    }
-
+    /**
+     * Набор прав доступа пользователя
+     */
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
+
+    public User(){
+
+    }
 
     /**
      * User details.

@@ -7,12 +7,21 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ItemResponse {
 
+    /**
+     * Наименоание номенклатуры
+     */
     @NotNull(message = "nomenclatureName не может быть NULL")
     private String nomenclatureName;
 
+    /**
+     * Идентификатор номенклатуры
+     */
     @NotNull(message = "nomenclatureId не может быть NULL")
     private long nomenclatureId;
 
+    /**
+     * Количество купленного товара
+     */
     @NotNull(message = "amount не может быть NULL")
     private long amount;
 

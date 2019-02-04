@@ -45,12 +45,6 @@ public class SaleService {
      * Обработка запросов клиентов
      */
 
-    public  List<SaleResponse>  findByUser(User user) {
-
-        List<Sale> sales = saleDao.findByUser(user);
-        return  newSaleResponseList(sales);
-    }
-
     public  List<SaleResponse>  findAll() {
 
         List<Sale> sales = saleDao.findAll();

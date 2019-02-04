@@ -10,10 +10,16 @@ import javax.persistence.*;
 @Data
 public class Sale {
 
+    /**
+     * Идентификатор продажи.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    /**
+     * Пользователь сформировавший продажу.
+     */
     @NonNull
     @ManyToOne(fetch = FetchType.EAGER)
     private User user;
