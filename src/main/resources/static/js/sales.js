@@ -8,7 +8,6 @@ Vue.component('sales-list', {
         return {
             name: frontendData.profile.name,
             url: "",
-            isAdmin: false,
             error: "",
             showErrors: false,
          }
@@ -36,10 +35,9 @@ Vue.component('sales-list', {
                                 '{{error}}' +
                             '</v-input>' +
                             '<v-btn' +
-                                ' color="success"' +
+                                ' color="primary"' +
                                 ' v-if="!showErrors"' +
                                 ' href = "/sale">' +
-                                '<v-icon dark>add</v-icon>' +
                                 'Добавить' +
                             '</v-btn>' +
                             '<v-list two-line>' +
@@ -56,7 +54,7 @@ Vue.component('sales-list', {
                                         '<v-btn icon ripple :href="url + sale.id">' +
                                             '<v-icon color="grey lighten-1">edit</v-icon>' +
                                          '</v-btn>' +
-                                        '<v-btn icon ripple @click="deleteSale(sale)" v-if="isAdmin">' +
+                                        '<v-btn icon ripple @click="deleteSale(sale)">' +
                                             '<v-icon color="grey lighten-1">delete</v-icon>' +
                                         '</v-btn>' +
                                     '</div>' +
@@ -70,11 +68,6 @@ Vue.component('sales-list', {
         '</v-app>',
     methods:{
         deleteSale: function (sale) {
-
-            if (!this.isAdmin) {
-                this.error = "Ошибка удаления продажи. Обратитесь к администратору";
-                this.showErrors = true;
-            }
 
             this.showErrors = false;
 
@@ -96,43 +89,22 @@ Vue.component('sales-list', {
     created: function() {
 
         this.url = "sale/";
-        this.isAdmin = frontendData.profile.isAdmin;
 
-        if (this.isAdmin) {
-            salesAdminAPI.get().then(result =>
-                    result.json().then(
-                        data => data.forEach(
-                            sale => {
-                                representation = {
-                                    id:sale.id,
-                                    username:sale.userName,
-                                    title:"Продажа № " + sale.id,
-                                };
-                                this.sales.push(representation);
-                            })),
-                result =>{
-                    this.error = "Ошибка определения списка продаж. Обратитесь к администратору";
-                    this.showErrors = true;
-                });
-        } else {
-            salesAPI.get().then(
-                result =>
-                    result.json().then(
-                        data => data.forEach(
-                            sale => {
-                                representation = {
-                                    id:sale.id,
-                                    username:sale.userName,
-                                    title:"Продажа № " + sale.id,
-                                };
-                                this.sales.push(representation);
-                            })),
-                result =>{
-                    this.error = "Ошибка определения списка продаж. Обратитесь к администратору";
-                    this.showErrors = true;
-                });
-        }
-
+        salesAdminAPI.get().then(result =>
+                result.json().then(
+                    data => data.forEach(
+                        sale => {
+                            representation = {
+                                id:sale.id,
+                                username:sale.userName,
+                                title:"Продажа № " + sale.id,
+                            };
+                            this.sales.push(representation);
+                        })),
+            result =>{
+                this.error = "Ошибка определения списка продаж. Обратитесь к администратору";
+                this.showErrors = true;
+            });
     }
 });
 

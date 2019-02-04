@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
             .and()
                 .csrf()
-                .disable() // TODO Придумать что делать с csrf
+                .disable()
                 .httpBasic()
                 .authenticationEntryPoint(authEntryPoint);
     }

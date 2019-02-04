@@ -16,9 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Controller
 @RequestMapping("/registration")

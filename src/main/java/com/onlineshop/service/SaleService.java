@@ -58,13 +58,26 @@ public class SaleService {
 
     }
 
-    public void createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
+    public  List<ItemResponse> findById(long id) throws SaleNotFound {
+
+        Sale sale = saleDao.findById(id);
+
+        if (sale == null) {
+            throw new SaleNotFound(id);
+        }
+
+        return newItemResponseList(sale);
+    }
+
+    public long createNewSales(SaleRequest saleRequest) throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
 
         Sale sale = new Sale();
         List<SaleItem> saleItemList = newSaleItemList(sale, saleRequest);
         sale.setUser(userDetailService.getAuthenticationUser());
 
         saveSale(sale, saleItemList);
+
+        return sale.getId();
     }
 
     public void updateById(long id, Sale saleFromDB, SaleRequest saleRequest)
@@ -168,5 +181,21 @@ public class SaleService {
         }
 
         return saleResponse;
+    }
+
+    private List<ItemResponse> newItemResponseList(Sale sale){
+
+        List<SaleItem> saleItems = saleItemDao.findBySale(sale);
+        List<ItemResponse> saleItemsResponse = new ArrayList<>();
+        for (Object saleItem: saleItems){
+            SaleItem saleItemEntity = (SaleItem) saleItem;
+            saleItemsResponse.add(
+                    new ItemResponse(
+                            saleItemEntity.getNomenclature().getName(),
+                            saleItemEntity.getNomenclature().getId(),
+                            saleItemEntity.getAmount()));
+        }
+
+        return saleItemsResponse;
     }
 }

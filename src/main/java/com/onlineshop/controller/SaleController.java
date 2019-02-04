@@ -2,6 +2,7 @@ package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.Sale;
 import com.onlineshop.dao.entitys.User;
+import com.onlineshop.dto.ItemResponse;
 import com.onlineshop.dto.SaleRequest;
 import com.onlineshop.dto.SaleResponse;
 import com.onlineshop.exception.NomenclatureIdNotFound;
@@ -61,6 +62,23 @@ public class SaleController {
     }
 
     @ApiOperation(
+            value = "Получение продажи текущего пользователя по иденификатору",
+            notes = "Получение продажи с сервера."
+    )
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "операция прошла успешно"),
+            @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 403, message = "получение информации о продаже"),
+            @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
+    })
+    @GetMapping(value = "rest-api/admin/sale/{id}")
+    public List<ItemResponse> saleById(
+            @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id)
+            throws SaleNotFound {
+        return saleService.findById(id);
+    }
+
+    @ApiOperation(
             value = "Создание новой продажи номенклатуры",
             notes = "Передача информации о новой продажи.."
     )
@@ -72,10 +90,11 @@ public class SaleController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PostMapping(value = "rest-api/sale")
-    public void createNewSale(@RequestBody @Valid SaleRequest saleRequest)
+    public long createNewSale(@RequestBody @Valid SaleRequest saleRequest)
             throws NomenclatureIdNotFound, NomenclatureIdNotFoundList {
-        saleService.createNewSales(saleRequest);
+        return saleService.createNewSales(saleRequest);
     }
+
 
     @ApiOperation(
             value = "Обновление существующей продажи номенклатуры",

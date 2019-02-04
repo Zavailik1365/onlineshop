@@ -101,7 +101,9 @@ Vue.component('user-detals', {
                                        ' v-if = "isAdmin&&!showErrors""/>' +
                                     '<v-btn color="success" @click = "save" v-if="!showErrors">Сохранить</v-btn>' +
                                     '<v-btn @click = "clear" v-if="!showErrors">Очистить</v-btn>' +
-                                    '<v-btn href="/admin/users" v-if="!showErrors">К списку</v-btn>' +
+                                    '<v-btn href="/admin/users" v-if="!showErrors">' +
+                                            '<v-icon >keyboard_return</v-icon>' +
+                                    '</v-btn>' +
                                 '</v-form>' +
                             '</v-flex>' +
                         '</v-layout>' +
