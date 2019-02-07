@@ -33,8 +33,7 @@ var app = new Vue({
                             ' placeholder="1406558"' +
                             ' type="password"' +
                             ' name="password"' +
-                            ' v-model="password"' +
-                            ' :rules="[rules.required]"/>' +
+                            ' v-model="password"/>' +
                         '<v-btn color="success" @click="login">Войти</v-btn>' +
                         '<v-btn href="/registration">Зарегистрироваться</v-btn>' +
                     '</v-form>' +

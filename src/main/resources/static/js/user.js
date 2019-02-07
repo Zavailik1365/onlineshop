@@ -1,4 +1,4 @@
-var userAPI = Vue.resource("/rest-api/user1");
+var userAPI = Vue.resource("/rest-api/user");
 var userAdminAPI = Vue.resource("/rest-api/admin/user/{id}");
 var rolesAdminAPI = Vue.resource("/rest-api/admin/roles");
 
@@ -175,7 +175,7 @@ Vue.component('user-detals', {
             this.id = frontendData.profile.userId;
             this.name = frontendData.profile.name;
 
-            if (this.isAdmin) {
+            if (this.isAdmin && this.id != null) {
                 userAdminAPI.get({id: this.id}).then(
                     response => {
                         this.username =  response.body.name;
@@ -186,15 +186,6 @@ Vue.component('user-detals', {
                     },
                     result =>{
                         this.error = "Ошибка получения данных пользователя. Обратитесь к администратору";
-                        this.showErrors = true;
-                    });
-
-                rolesAdminAPI.get().then(
-                    response => {
-                        this.rolesitems =  response.body
-                    },
-                    result =>{
-                        this.error = "Ошибка получения данных о ролях. Обратитесь к администратору";
                         this.showErrors = true;
                     });
 
@@ -211,6 +202,17 @@ Vue.component('user-detals', {
                         this.error = "Ошибка получения данных пользователя. Обратитесь к администратору";
                         this.showErrors = true;
                     });
+
+                if (this.isAdmin){
+                    rolesAdminAPI.get().then(
+                        response => {
+                            this.rolesitems =  response.body
+                        },
+                        result =>{
+                            this.error = "Ошибка получения данных о ролях. Обратитесь к администратору";
+                            this.showErrors = true;
+                        });
+                    }
             }
         }
     }

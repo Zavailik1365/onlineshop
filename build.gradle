@@ -34,4 +34,7 @@ dependencies {
     compile "ch.qos.logback:logback-classic:${logbackClassicVersion}"
     compile "ch.qos.logback:logback-core:${logbackClassicVersion}"
     compile "net.logstash.logback:logstash-logback-encoder:${logbackEncoderVersion}"
+    compile "org.flywaydb:flyway-core:${flywayVersion}"
+
+    testCompile "org.springframework.boot:spring-boot-starter-test:${springBootVersion}"
 }

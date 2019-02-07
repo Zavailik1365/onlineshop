@@ -11,7 +11,7 @@
 
     <appender name="file" class="ch.qos.logback.core.FileAppender">
         <file>
-            C:/JavaProperties/logs/onlineshop.log <!--TODO заменить на прод-->
+            C:/JavaProperties/logs/onlineshop.log
         </file>
         <layout>
             <pattern>%-36(%d [%13.13thread{13}]) %-5level %36.36logger{36} - %msg%n</pattern>

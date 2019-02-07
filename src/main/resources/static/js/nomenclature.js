@@ -90,7 +90,7 @@ Vue.component('user-detals', {
                     description: this.description
                 };
 
-                if (this.id == ""){
+                if (this.id == null){
                     nomenclatureAdminAPI.save(request)
                         .then(response => {
                                 alert("Данные номенклатуры сохранены.");
@@ -119,7 +119,7 @@ Vue.component('user-detals', {
             this.id = frontendData.profile.nomenclatureId;
             this.username = frontendData.profile.name;
 
-            if (this.id !== ""){
+            if (this.id != null){
                 nomenclatureAPI.get({id: this.id}).then(
                     response => {
                         this.description =  response.body.description;
