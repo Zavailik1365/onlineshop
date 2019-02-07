@@ -1,6 +1,7 @@
 package com.onlineshop.controller;
 
 import com.onlineshop.dao.entitys.Nomenclature;
+import com.onlineshop.exception.NomenclatureAlreadyExist;
 import com.onlineshop.exception.NomenclatureIdNotFound;
 import com.onlineshop.service.NomenclatureService;
 import io.swagger.annotations.*;
@@ -65,7 +66,8 @@ public class NomenclatureController {
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PostMapping(value = "rest-api/admin/nomenclature")
-    public Nomenclature nomenclatureCreate(@RequestBody @Valid Nomenclature nomenclature) {
+    public Nomenclature nomenclatureCreate(@RequestBody @Valid Nomenclature nomenclature)
+            throws NomenclatureAlreadyExist {
         return nomenclatureService.create(nomenclature);
     }
 

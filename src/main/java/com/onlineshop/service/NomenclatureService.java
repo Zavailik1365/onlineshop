@@ -2,6 +2,7 @@ package com.onlineshop.service;
 
 import com.onlineshop.dao.entitys.Nomenclature;
 import com.onlineshop.dao.jpa.NomenclatureDao;
+import com.onlineshop.exception.NomenclatureAlreadyExist;
 import com.onlineshop.exception.NomenclatureIdNotFound;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,13 @@ public class NomenclatureService {
         return nomenclatureDao.findAll();
     }
 
-    public Nomenclature create(Nomenclature nomenclature) {
+    public Nomenclature create(Nomenclature nomenclature) throws NomenclatureAlreadyExist {
+
+        Nomenclature nomenclatureDB = nomenclatureDao.findById(nomenclature.getId());
+        if (nomenclatureDB != null) {
+            throw new NomenclatureAlreadyExist(nomenclature.getId());
+        }
+
         return nomenclatureDao.save(nomenclature);
     }
 

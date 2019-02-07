@@ -26,7 +26,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
                 "file:/C:/JavaProperties/onlineshop/datasource.properties"
         }, ignoreResourceNotFound = true),
         @PropertySource(value = {
-                "classpath:datasource.properties",
+                "classpath:services.properties",
                 "file:/C:/JavaProperties/onlineshop/service.properties"
         }, ignoreResourceNotFound = true)
 })

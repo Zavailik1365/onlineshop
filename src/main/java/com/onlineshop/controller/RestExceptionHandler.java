@@ -34,20 +34,21 @@ public class RestExceptionHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(
             {
-                    UserAlreadyExist.class
+                    UserAlreadyExist.class,
+                    NomenclatureAlreadyExist.class
             })
     @ResponseBody
-    public ResponseEntity<ExceptionResponse> handleCONFLICT (UserAlreadyExist exception) {
+    public ResponseEntity<ExceptionResponse> handleCONFLICT (Exception exception) {
         LOGGER.warn(exception.getMessage());
         ExceptionResponse response = new ExceptionResponse();
         response.setErrors(Collections.singletonList(exception.getMessage()));
         return new ResponseEntity<>(response, HttpStatus.CONFLICT);
     }
 
-    public class ExceptionResponse {
+    private class ExceptionResponse {
         private List<String> errors;
 
-        public void setErrors(List<String> errors) {
+        private void setErrors(List<String> errors) {
             this.errors = errors;
         }
     }
