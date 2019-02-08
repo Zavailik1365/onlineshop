@@ -53,6 +53,11 @@ public class MainController {
         return "user";
     }
 
+    @RequestMapping(value = "/403", method = RequestMethod.GET)
+    public String accesssDenied() {
+          return "403";
+    }
+
     @GetMapping(value = "admin/users")
     public String users(Model model, @AuthenticationPrincipal User user) {
 

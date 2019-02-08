@@ -15,6 +15,8 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Random;
 
 
 @RunWith(SpringRunner.class)
@@ -25,8 +27,10 @@ public class NomenclatureControllerTest {
     private String username;
     @Value("${testdata.password}")
     private String password;
+
     private HttpHeaders auth;
     private String nomenclatureControllerUrl;
+    private String nomenclaturesControllerUrl;
 
     @LocalServerPort
     private int port;
@@ -35,17 +39,16 @@ public class NomenclatureControllerTest {
     private TestRestTemplate restTemplate;
 
     static class TestData {
-
-        static final String NOMENCLATURE_N1_NAME = "Тестовя номенклатура 3";
+        static final String NOMENCLATURE_N1_NAME = "Тестовя номенклатура 1";
         static final String NOMENCLATURE_N1_DESCRIPTION = "Тестовя номенклатура 1";
-        static final long NOMENCLATURE_N2_UUID = 2;
+        static final String NOMENCLATURE_N2_NAME = "Тестовя номенклатура 2";
         static final String NOMENCLATURE_N2_DESCRIPTION = "Тестовя номенклатура 2";
-
     }
 
     @Before
-    public void initData() {
+    public void initSettings() {
         nomenclatureControllerUrl = "http://localhost:" + port + "/rest-api/admin/nomenclature";
+        nomenclaturesControllerUrl = "http://localhost:" + port + "/rest-api/nomenclatures";
         auth = new HttpHeaders() {{
             String auth = username + ":" + password;
             byte[] encodedAuth = Base64.encodeBase64(
@@ -56,21 +59,99 @@ public class NomenclatureControllerTest {
     }
 
     @Test
-    public void createNewNomenclature() {
+    public void createNewAndUpdateNomenclature() {
 
+        // Создание новой номенклатуры
         Nomenclature request = new Nomenclature();
-        request.setId(1);
         request.setDescription(TestData.NOMENCLATURE_N1_NAME);
         request.setName(TestData.NOMENCLATURE_N1_DESCRIPTION);
 
-        ResponseEntity<Void> response = restTemplate.exchange(
+        ResponseEntity<Nomenclature> responseCreate = restTemplate.exchange(
                 nomenclatureControllerUrl,
                 HttpMethod.POST,
                 new HttpEntity<>(request, auth),
-                Void.class);
+                Nomenclature.class);
+
+        Nomenclature nomenclatureResponse = responseCreate.getBody();
+
+        // Проверка результата создания номенклатуры.
         Assert.assertEquals(
-                HttpStatus.INTERNAL_SERVER_ERROR,
-                response.getStatusCode());
+                HttpStatus.OK,
+                responseCreate.getStatusCode());
+
+        assert nomenclatureResponse != null;
+
+        Assert.assertEquals(
+                TestData.NOMENCLATURE_N1_NAME,
+                nomenclatureResponse.getName());
+
+        Assert.assertEquals(
+                TestData.NOMENCLATURE_N1_DESCRIPTION,
+                nomenclatureResponse.getDescription());
+
+        // Обновление существующей номенклатуры.
+        nomenclatureResponse.setDescription(TestData.NOMENCLATURE_N2_NAME);
+        nomenclatureResponse.setName(TestData.NOMENCLATURE_N2_DESCRIPTION);
+
+        ResponseEntity<Nomenclature> responseUpdate = restTemplate.exchange(
+                nomenclatureControllerUrl
+                        + "/" + String.valueOf(nomenclatureResponse.getId()),
+                HttpMethod.PUT,
+                new HttpEntity<>(nomenclatureResponse, auth),
+                Nomenclature.class);
+
+        // Проверка результата обновления.
+        Assert.assertEquals(
+                HttpStatus.OK,
+                responseUpdate.getStatusCode());
+
+        assert  responseUpdate.getBody() != null;
+
+        Assert.assertEquals(
+                TestData.NOMENCLATURE_N2_NAME,
+                responseUpdate.getBody().getName());
+
+        Assert.assertEquals(
+                TestData.NOMENCLATURE_N2_DESCRIPTION,
+                responseUpdate.getBody().getDescription());
     }
+
+    @Test
+    public void getAllNomenclature() {
+
+        ResponseEntity<List> responseList = restTemplate.exchange(
+                nomenclaturesControllerUrl,
+                HttpMethod.GET,
+                new HttpEntity<>(auth),
+                List.class);
+
+        Assert.assertEquals(
+                HttpStatus.OK,
+                responseList.getStatusCode());
+    }
+
+    @Test
+    public void updateNonexistentNomenclature() {
+
+         long id = new Random().nextLong();
+
+        Nomenclature request = new Nomenclature();
+        request.setId(id);
+        request.setDescription(TestData.NOMENCLATURE_N1_NAME);
+        request.setName(TestData.NOMENCLATURE_N1_DESCRIPTION);
+
+        ResponseEntity<Void> responseUpdate = restTemplate.exchange(
+                nomenclatureControllerUrl + String.valueOf(id),
+                HttpMethod.PUT,
+                new HttpEntity<>(request, auth),
+                Void.class);
+
+        Assert.assertEquals(
+                HttpStatus.NOT_FOUND,
+                responseUpdate.getStatusCode());
+
+    }
+
+
 
 }
