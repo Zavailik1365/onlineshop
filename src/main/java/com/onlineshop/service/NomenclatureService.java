@@ -63,11 +63,4 @@ public class NomenclatureService {
         return nomenclatureDao.save(nomenclatureFromDB);
     }
 
-    public void delete(long id, Nomenclature nomenclatureFromDB) throws NomenclatureIdNotFound {
-
-        if (nomenclatureFromDB == null) {
-            throw new NomenclatureIdNotFound(id);
-        }
-        nomenclatureDao.delete(nomenclatureFromDB);
-    }
 }

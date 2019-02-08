@@ -35,7 +35,8 @@ public class SaleController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 403, message = "отсутствуют права на получение списка всех продаж продажи"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/admin/sales")
@@ -50,12 +51,14 @@ public class SaleController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 403, message = "получение информации о продаже"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
+            @ApiResponse(code = 404, message = "продажа по идентификатору не найдена"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/admin/sale/{id}")
     public List<ItemResponse> saleById(
-            @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id)
+            @ApiParam(value = "идентификатор продажи") @PathVariable("id") long id)
             throws SaleNotFound {
         return saleService.findById(id);
     }
@@ -67,8 +70,8 @@ public class SaleController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 400, message = "номенклатура по идентификатору не найдена"),
-            @ApiResponse(code = 403, message = "отсутствуют права на формирование продажи"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PostMapping(value = "rest-api/sale")
@@ -85,13 +88,14 @@ public class SaleController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 404, message = "продажа по идентификатору не найдена"),
-            @ApiResponse(code = 403, message = "отсутствуют права на обновление продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping(value = "rest-api/admin/sale/{id}")
     public void updateSaleById(
-            @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
+            @ApiParam(value = "идентификатор продажи") @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB,
             @RequestBody @Valid SaleRequest saleRequest)
             throws SaleNotFound, NomenclatureIdNotFoundList, NomenclatureIdNotFound {
@@ -105,13 +109,14 @@ public class SaleController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 404, message = "продажа по идентификатору не найдена"),
-            @ApiResponse(code = 403, message = "отсутствуют права на удаление продажи"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @DeleteMapping(value = "rest-api/admin/sale/{id}")
     public void deleteSaleById(
-            @ApiParam(value = "идентификатор продажи", required = true) @PathVariable("id") long id,
+            @ApiParam(value = "идентификатор продажи") @PathVariable("id") long id,
             @PathVariable("id") Sale saleFromDB)
             throws SaleNotFound {
         saleService.deleteById(id, saleFromDB);

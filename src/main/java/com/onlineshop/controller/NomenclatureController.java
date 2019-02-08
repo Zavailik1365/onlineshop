@@ -31,7 +31,8 @@ public class NomenclatureController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 403, message = "отсутствуют права на редактирование номенклатуры"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/nomenclatures")
@@ -46,12 +47,14 @@ public class NomenclatureController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
-            @ApiResponse(code = 403, message = "отсутствуют права на получение номенклатуры"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
+            @ApiResponse(code = 404, message = "номенклатура по идентификатору не найдена"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/nomenclature/{id}")
     public Nomenclature nomenclature(
-            @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id)
+            @ApiParam(value = "идентификатор номенклатуры") @PathVariable("id") long id)
                 throws NomenclatureIdNotFound {
         return nomenclatureService.findById(id);
     }
@@ -63,6 +66,8 @@ public class NomenclatureController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PostMapping(value = "rest-api/admin/nomenclature")
@@ -78,13 +83,15 @@ public class NomenclatureController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 404, message = "номенклатура по идентификатору не найдена"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping(value = "rest-api/admin/nomenclature/{id}")
     @ResponseBody
     public Nomenclature nomenclatureUpdateById(
-            @ApiParam(value = "идентификатор номенклатуры", required = true) @PathVariable("id") long id,
+            @ApiParam(value = "идентификатор номенклатуры") @PathVariable("id") long id,
             @PathVariable("id") Nomenclature nomenclatureFromDB,
             @RequestBody @Valid Nomenclature nomenclature)
             throws NomenclatureIdNotFound {

@@ -36,6 +36,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/admin/users")
@@ -50,12 +52,14 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/admin/user/{id}")
     public UserResponse userById(
-            @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id,
+            @ApiParam(value = "идентификатор пользователя") @PathVariable("id") long id,
             @PathVariable("id") @Valid  User user)
             throws UserNotFound {
         return userDetailService.findById(id, user);
@@ -68,6 +72,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/user")
@@ -84,6 +90,8 @@ public class UserController {
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping(value = "rest-api/user")
@@ -101,12 +109,14 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 404, message = "пользователь по идентификатору не найден"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @PutMapping(value = "rest-api/admin/user/{id}")
     public UserResponse userUpdate(
-            @ApiParam(value = "идентификатор пользователя", required = true) @PathVariable("id") long id,
+            @ApiParam(value = "идентификатор пользователя") @PathVariable("id") long id,
             @PathVariable("id") User userFromDB,
             @RequestBody @Valid UserRequestAdmin userRequestAdmin)
             throws UserNotFound {
@@ -120,6 +130,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 200, message = "операция прошла успешно"),
             @ApiResponse(code = 400, message = "запрос неверно сформирован"),
+            @ApiResponse(code = 401, message = "ошибка авторизации"),
+            @ApiResponse(code = 403, message = "доступ запрещен"),
             @ApiResponse(code = 500, message = "внутренняя ошибка сервера"),
     })
     @GetMapping(value = "rest-api/admin/roles")
