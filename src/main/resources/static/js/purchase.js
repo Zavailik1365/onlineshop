@@ -97,6 +97,12 @@ Vue.component('nomenclature-list', {
                     request.items.push(itemRequest);
                 }
             }
+
+            if (request.items.length === 0){
+                alert("Не выбрана номенклатура для покупки")
+                return;
+            }
+
             saleAPI.save(request).then(
                 response => {
                     items = [];

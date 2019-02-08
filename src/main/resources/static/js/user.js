@@ -86,7 +86,7 @@ Vue.component('user-detals', {
                                         ' v-model="roles"\n' +
                                         '  label="Роли"\n' +
                                         ' multiple' +
-                                        ' v-if = "isAdmin&&!showErrors">' +
+                                        ' v-if = "isAdmin&&!showErrors&&(id != null)">' +
                                         '<template' +
                                             ' slot="selection"' +
                                             ' slot-scope="{ item, index }">' +
@@ -103,7 +103,7 @@ Vue.component('user-detals', {
                                     '<v-checkbox' +
                                         ' required label="Активный"' +
                                         ' v-model="active"' +
-                                       ' v-if = "isAdmin&&!showErrors""/>' +
+                                       ' v-if = "isAdmin&&!showErrors&&(id != null)"/>' +
                                     '<v-btn color="success" @click = "save" v-if="!showErrors">Сохранить</v-btn>' +
                                     '<v-btn @click = "clear" v-if="!showErrors">Очистить</v-btn>' +
                                     '<v-btn href="/admin/users" v-if="!showErrors">' +
@@ -130,7 +130,7 @@ Vue.component('user-detals', {
                     return;
                 }
                 this.showErrors = false;
-                if (this.isAdmin) {
+                if (this.isAdmin && this.id != null) {
                     var request = {
                         username: this.username,
                         fullname: this.fullname,
@@ -188,31 +188,29 @@ Vue.component('user-detals', {
                         this.error = "Ошибка получения данных пользователя. Обратитесь к администратору";
                         this.showErrors = true;
                     });
+                rolesAdminAPI.get().then(
+                    response => {
+                        this.rolesitems =  response.body
+                    },
+                    result =>{
+                        this.error = "Ошибка получения данных о ролях. Обратитесь к администратору";
+                        this.showErrors = true;
+                    });
 
             } else {
                 userAPI.get().then(
                     response => {
-                       this.username =  response.body.name;
-                       this.fullname =  response.body.fullname;
-                       this.email =  response.body.email;
-                       this.active =  response.body.active;
-                       this.roles =  response.body.roles;
+                        this.username =  response.body.name;
+                        this.fullname =  response.body.fullname;
+                        this.email =  response.body.email;
+                        this.active =  response.body.active;
+                        this.roles =  response.body.roles;
                     },
                     result =>{
                         this.error = "Ошибка получения данных пользователя. Обратитесь к администратору";
                         this.showErrors = true;
                     });
 
-                if (this.isAdmin){
-                    rolesAdminAPI.get().then(
-                        response => {
-                            this.rolesitems =  response.body
-                        },
-                        result =>{
-                            this.error = "Ошибка получения данных о ролях. Обратитесь к администратору";
-                            this.showErrors = true;
-                        });
-                    }
             }
         }
     }

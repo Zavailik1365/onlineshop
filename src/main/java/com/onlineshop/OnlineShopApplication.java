@@ -48,7 +48,7 @@ public class OnlineShopApplication {
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
                 .title("OnlineShop")
-                .description("")
+                .description("API приложения интернет магазин")
                 .version("1.0")
                 .termsOfServiceUrl("")
                 .license("")
